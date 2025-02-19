@@ -1,0 +1,10 @@
+{
+    "name": "SelfSortingStorage",
+    "version_number": "0.1.0",
+    "website_url": "https://github.com/ZigzagAwaka/SelfSortingStorage",
+    "description": "Adds a storage container to the shop that automatically sorts items.",
+    "dependencies": [
+        "Evaisa-LethalLib-0.16.1",
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
