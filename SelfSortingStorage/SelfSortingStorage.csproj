@@ -13,11 +13,17 @@
       <HintPath>..\..\_utils\Librairies\Assembly-CSharp.dll</HintPath>
       <Publicize>true</Publicize>
     </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\_utils\Librairies\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\_utils\Librairies\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="LethalLib">
       <HintPath>..\..\_utils\Librairies\LethalLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\_utils\Librairies\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>..\..\_utils\Librairies\Unity.InputSystem.dll</HintPath>

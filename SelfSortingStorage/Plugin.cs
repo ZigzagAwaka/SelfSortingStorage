@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using HarmonyLib;
 using LethalLib.Extras;
 using LethalLib.Modules;
 using System.Collections.Generic;
@@ -18,8 +19,10 @@ namespace SelfSortingStorage
         const string VERSION = "0.1.0";
 
         public static Plugin instance;
-        public ManualLogSource logger;
+        public static ManualLogSource logger;
+        private readonly Harmony harmony = new Harmony(GUID);
         internal static Config config { get; private set; } = null!;
+        public const string VANILLA_NAME = "LethalCompanyGame";
 
         public static void SetupNetwork()
         {
@@ -46,6 +49,11 @@ namespace SelfSortingStorage
             }
         }
 
+        void HarmonyPatchAll()
+        {
+            harmony.PatchAll();
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051")]
         void Awake()
         {
@@ -58,14 +66,17 @@ namespace SelfSortingStorage
             string directory = "Assets/Data/_Misc/";
             var sssUnlockable = bundle.LoadAsset<UnlockableItemDef>(directory + "SSS_Module/SSSModuleUnlockable.asset");
 
-            config = new Config(base.Config);
+            config = new Config(Config);
             config.SetupCustomConfigs();
             SetupNetwork();
 
+            ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor);
+            sssUnlockable.unlockable.prefabObject.GetComponent<MeshRenderer>().materials[0].color = customColor;
             NetworkPrefabs.RegisterNetworkPrefab(sssUnlockable.unlockable.prefabObject);
             Utilities.FixMixerGroups(sssUnlockable.unlockable.prefabObject);
             Unlockables.RegisterUnlockable(sssUnlockable, 20, StoreType.ShipUpgrade);
 
+            HarmonyPatchAll();
             logger.LogInfo("SelfSortingStorage is loaded !");
         }
     }
