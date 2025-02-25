@@ -43,7 +43,8 @@ namespace SelfSortingStorage.Utils
                 return;
             SmartMemory.Instance.ClearAll();
             cupboard.placedItems.Clear();
-            Plugin.logger.LogInfo("Smart Cupboard was reseted due to a game over.");
+            if (Plugin.config.verboseLogging.Value)
+                Plugin.logger.LogInfo("Smart Cupboard was reseted due to a game over.");
         }
     }
 
@@ -75,7 +76,8 @@ namespace SelfSortingStorage.Utils
                     spawnIndex++;
                 }
             }
-            Plugin.logger.LogInfo("Smart Cupboard stored scraps were removed due to all players being dead.");
+            if (Plugin.config.verboseLogging.Value)
+                Plugin.logger.LogInfo("Smart Cupboard stored scraps were removed due to all players being dead.");
         }
     }
 }

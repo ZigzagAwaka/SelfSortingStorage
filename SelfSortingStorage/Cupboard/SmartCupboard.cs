@@ -24,7 +24,7 @@ namespace SelfSortingStorage.Cupboard
             if (IsServer)
                 memory.Initialize();
             else
-                MemoryFullServerRpc();
+                StartCoroutine(SyncCupboard());
         }
 
         public void Update()
@@ -52,6 +52,8 @@ namespace SelfSortingStorage.Cupboard
                         if (Plugin.config.rescaleItems.Value)
                             ScaleItemClientRpc(item.gameObject.GetComponent<NetworkObject>(), false);
                         var itemData = memory.RetrieveData(spawnIndex);
+                        if (!memory.IsFull())
+                            SetSizeClientRpc(memory.Size);
                         indexToRemove.Add(spawnIndex);
                         if (itemData != null && itemData.Quantity >= 1)
                         {
@@ -90,6 +92,8 @@ namespace SelfSortingStorage.Cupboard
                             if (array[i].itemProperties.itemName == item.Id.Split('/')[1] &&
                                 Vector3.Distance(placePositions[spawnIndex].position, array[i].transform.position) <= distanceSearch)
                             {
+                                if (Plugin.config.rescaleItems.Value)
+                                    Effects.RescaleItemIfTooBig(array[i]);
                                 placedItems[spawnIndex] = array[i];
                             }
                         }
@@ -127,7 +131,7 @@ namespace SelfSortingStorage.Cupboard
             var itemData = new SmartMemory.Data(item);
             var shouldSpawn = memory.StoreData(itemData, out int spawnIndex);
             if (memory.IsFull())
-                MemoryFullClientRpc(true);
+                SetSizeClientRpc(memory.Size);
             if (shouldSpawn)
                 SpawnItem(itemData, spawnIndex);
             else
@@ -190,7 +194,7 @@ namespace SelfSortingStorage.Cupboard
         }
 
         [ClientRpc]
-        private void ScaleItemClientRpc(NetworkObjectReference itemRef, bool scaleMode, Vector3 bounds = default)
+        private void ScaleItemClientRpc(NetworkObjectReference itemRef, bool scaleMode, Vector3 bounds = default, ClientRpcParams clientRpcParams = default)
         {
             if (Plugin.config.rescaleItems.Value)
                 StartCoroutine(ScaleItem(itemRef, scaleMode, bounds));
@@ -217,16 +221,39 @@ namespace SelfSortingStorage.Cupboard
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void MemoryFullServerRpc()
+        private IEnumerator SyncCupboard()
         {
-            MemoryFullClientRpc(memory.IsFull());
+            if (Plugin.config.verboseLogging.Value)
+                Plugin.logger.LogInfo("Syncing Cupboard from host player");
+            while (GameNetworkManager.Instance == null || GameNetworkManager.Instance.localPlayerController == null)
+                yield return new WaitForSeconds(0.03f);
+            SyncServerRpc(GameNetworkManager.Instance.localPlayerController.OwnerClientId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SyncServerRpc(ulong clientId)
+        {
+            if (memory.IsFull())
+                SetSizeClientRpc(memory.Size);
+            if (placedItems.Count == 0 || !Plugin.config.rescaleItems.Value)
+                return;
+            var clientRpcParams = new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new[] { clientId } } };
+            foreach (var (_, item) in placedItems)
+            {
+                if (!item.isHeld && !item.isHeldByEnemy)
+                {
+                    var collider = item.GetComponent<BoxCollider>();
+                    if (collider == null)
+                        continue;
+                    ScaleItemClientRpc(item.gameObject.GetComponent<NetworkObject>(), true, collider.bounds.size, clientRpcParams);
+                }
+            }
         }
 
         [ClientRpc]
-        private void MemoryFullClientRpc(bool full)
+        private void SetSizeClientRpc(int size)
         {
-            memory.Size = full ? memory.Capacity : 0;
+            memory.Size = size;
         }
     }
 }

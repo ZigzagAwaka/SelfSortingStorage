@@ -99,6 +99,14 @@ namespace SelfSortingStorage.Utils
             component.fallTime = 0f;
         }
 
+        public static void RescaleItemIfTooBig(GrabbableObject component)
+        {
+            var collider = component.GetComponent<BoxCollider>();
+            if (collider == null)
+                return;
+            RescaleItemIfTooBig(component, collider.bounds.size);
+        }
+
         public static void RescaleItemIfTooBig(GrabbableObject component, Vector3 bounds)
         {
             var collider = component.GetComponent<BoxCollider>();
