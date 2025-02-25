@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
+using GameNetcodeStuff;
 using HarmonyLib;
 using LethalLib.Extras;
 using LethalLib.Modules;
@@ -22,9 +23,10 @@ namespace SelfSortingStorage
         public static ManualLogSource logger;
         private readonly Harmony harmony = new Harmony(GUID);
         internal static Config config { get; private set; } = null!;
-        public const string VANILLA_NAME = "LethalCompanyGame";
+        internal const string VANILLA_NAME = "LethalCompanyGame";
+        internal readonly static List<(System.Func<PlayerControllerB, bool>, string)> spTriggerValidations = new List<(System.Func<PlayerControllerB, bool>, string)>();
 
-        public static void SetupNetwork()
+        private static void SetupNetwork()
         {
             IEnumerable<System.Type> types;
             try

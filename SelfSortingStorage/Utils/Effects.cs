@@ -38,6 +38,14 @@ namespace SelfSortingStorage.Utils
                     notValidText = "[Scraps not allowed]";
                     return false;
                 }
+                foreach (var triggerValidation in Plugin.spTriggerValidations)
+                {
+                    if (!triggerValidation.Item1.Invoke(player))
+                    {
+                        notValidText = triggerValidation.Item2;
+                        return false;
+                    }
+                }
                 return true;
             }
             return false;

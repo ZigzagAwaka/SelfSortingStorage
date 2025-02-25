@@ -68,6 +68,11 @@ namespace SelfSortingStorage.Cupboard
             }
         }
 
+        public static void AddTriggerValidation(System.Func<PlayerControllerB, bool> func, string notValidText)
+        {
+            Plugin.spTriggerValidations.Add((func, notValidText));
+        }
+
         public IEnumerator ReloadPlacedItems()  // used by SavingModule
         {
             yield return new WaitForSeconds(1);  // wait for items to spawn
