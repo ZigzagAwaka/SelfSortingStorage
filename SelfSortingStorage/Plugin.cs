@@ -16,7 +16,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "0.1.0";
+        const string VERSION = "1.0.0";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -74,7 +74,7 @@ namespace SelfSortingStorage
             sssUnlockable.unlockable.prefabObject.GetComponent<MeshRenderer>().materials[0].color = customColor;
             NetworkPrefabs.RegisterNetworkPrefab(sssUnlockable.unlockable.prefabObject);
             Utilities.FixMixerGroups(sssUnlockable.unlockable.prefabObject);
-            Unlockables.RegisterUnlockable(sssUnlockable, 20, StoreType.ShipUpgrade);
+            Unlockables.RegisterUnlockable(sssUnlockable, config.cupboardPrice.Value, StoreType.ShipUpgrade);
 
             HarmonyPatchAll();
             logger.LogInfo("SelfSortingStorage is loaded !");

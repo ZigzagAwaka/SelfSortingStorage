@@ -13,7 +13,7 @@ namespace SelfSortingStorage.Cupboard
         public InteractTrigger triggerScript;
         public Transform[] placePositions;
         public SmartMemory memory = new SmartMemory();
-        private readonly Dictionary<int, GrabbableObject> placedItems = new Dictionary<int, GrabbableObject>();
+        public readonly Dictionary<int, GrabbableObject> placedItems = new Dictionary<int, GrabbableObject>();
         private readonly List<int> indexToRemove = new List<int>();
 
         public SmartCupboard() { }
@@ -38,10 +38,9 @@ namespace SelfSortingStorage.Cupboard
                 }
                 else
                 {
-                    var player = GameNetworkManager.Instance.localPlayerController;
-                    triggerScript.interactable = player.isHoldingObject && !player.isGrabbingObjectAnimation && player.currentlyHeldObjectServer != null;
+                    triggerScript.interactable = Effects.IsTriggerValid(GameNetworkManager.Instance.localPlayerController, out var notValidText);
                     if (!triggerScript.interactable)
-                        triggerScript.disabledHoverTip = "[Nothing to store]";
+                        triggerScript.disabledHoverTip = notValidText;
                 }
             }
             if (IsServer)
@@ -50,6 +49,8 @@ namespace SelfSortingStorage.Cupboard
                 {
                     if (item.isHeld || item.isHeldByEnemy)
                     {
+                        if (Plugin.config.rescaleItems.Value)
+                            ScaleItemClientRpc(item.gameObject.GetComponent<NetworkObject>(), false);
                         var itemData = memory.RetrieveData(spawnIndex);
                         indexToRemove.Add(spawnIndex);
                         if (itemData != null && itemData.Quantity >= 1)
@@ -67,7 +68,7 @@ namespace SelfSortingStorage.Cupboard
             }
         }
 
-        public IEnumerator ReloadPlacedItems()
+        public IEnumerator ReloadPlacedItems()  // used by SavingModule
         {
             yield return new WaitForSeconds(1);  // wait for items to spawn
             int spawnIndex = 0;
@@ -129,7 +130,8 @@ namespace SelfSortingStorage.Cupboard
                 if (placedItems.TryGetValue(spawnIndex, out var component))
                     PlayDropSFXClientRpc(component.gameObject.GetComponent<NetworkObject>());
             }
-            Plugin.logger.LogWarning(memory.ToString());
+            if (Plugin.config.verboseLogging.Value)
+                Plugin.logger.LogWarning(memory.ToString());
         }
 
         private void SpawnItem(SmartMemory.Data itemData, int spawnIndex, bool isStacked = false)
@@ -140,7 +142,7 @@ namespace SelfSortingStorage.Cupboard
             if (item != null)
             {
                 GetPlacePosition(spawnIndex, out var position, out var rotation);
-                var itemRef = Effects.Spawn(item, position, rotation, parentObject.transform);
+                var itemRef = Effects.SpawnItem(item, position, rotation, parentObject.transform, itemData.Value);
                 SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, spawnIndex, isStacked);
             }
         }
@@ -162,6 +164,13 @@ namespace SelfSortingStorage.Cupboard
                 if (IsServer)
                 {
                     placedItems[spawnIndex] = component;
+                    if (Plugin.config.rescaleItems.Value)
+                    {
+                        var collider = component.GetComponent<BoxCollider>();
+                        if (collider == null)
+                            yield break;
+                        ScaleItemClientRpc(itemRef, true, collider.bounds.size);
+                    }
                 }
             }
         }
@@ -172,6 +181,34 @@ namespace SelfSortingStorage.Cupboard
             if (itemRef.TryGet(out var itemNetObject))
             {
                 itemNetObject.GetComponent<GrabbableObject>().PlayDropSFX();
+            }
+        }
+
+        [ClientRpc]
+        private void ScaleItemClientRpc(NetworkObjectReference itemRef, bool scaleMode, Vector3 bounds = default)
+        {
+            if (Plugin.config.rescaleItems.Value)
+                StartCoroutine(ScaleItem(itemRef, scaleMode, bounds));
+        }
+
+        private IEnumerator ScaleItem(NetworkObjectReference itemRef, bool scaleMode, Vector3 bounds)
+        {
+            if (scaleMode)
+            {
+                NetworkObject? itemNetObject;
+                while (!itemRef.TryGet(out itemNetObject))
+                    yield return new WaitForSeconds(0.03f);
+                var component = itemNetObject.GetComponent<GrabbableObject>();
+                while (component.originalScale == Vector3.zero)  // wait for item to start (set originalScale)
+                    yield return new WaitForSeconds(0.03f);
+                Effects.RescaleItemIfTooBig(component, bounds);
+            }
+            else
+            {
+                if (itemRef.TryGet(out var itemNetObject))
+                {
+                    Effects.ScaleBackItem(itemNetObject.GetComponent<GrabbableObject>());
+                }
             }
         }
 

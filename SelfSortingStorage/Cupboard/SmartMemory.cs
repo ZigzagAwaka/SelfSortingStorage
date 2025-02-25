@@ -63,7 +63,7 @@ namespace SelfSortingStorage.Cupboard
 
         public SmartMemory()
         {
-            Clear(false);
+            ClearAll(false);
         }
 
         public bool IsFull()
@@ -71,9 +71,9 @@ namespace SelfSortingStorage.Cupboard
             return Size == Capacity;
         }
 
-        public void Clear(bool clearAll = true)
+        public void ClearAll(bool resetData = true)
         {
-            if (clearAll)
+            if (resetData)
             {
                 ItemList.ForEach(x => x.Clear());
                 ItemList.Clear();
@@ -102,21 +102,27 @@ namespace SelfSortingStorage.Cupboard
         public bool StoreData(Data data, out int spawnIndex)
         {
             spawnIndex = 0;
-            Plugin.logger.LogError(ToString());
+            if (Plugin.config.verboseLogging.Value)
+            {
+                Plugin.logger.LogWarning(ToString());
+                Plugin.logger.LogWarning("Storing: " + data.Id);
+            }
             foreach (var list in ItemList)
             {
                 foreach (var item in list)
                 {
                     if (!item.IsValid())
                     {
-                        Plugin.logger.LogError("invalid");
+                        if (Plugin.config.verboseLogging.Value)
+                            Plugin.logger.LogWarning("Found 1 free space");
                         item.Update(data);
                         Size++;
                         return true;
                     }
                     else if (item.IsValid() && item.Id == data.Id)
                     {
-                        Plugin.logger.LogError("same: " + item.Id);
+                        if (Plugin.config.verboseLogging.Value)
+                            Plugin.logger.LogWarning("Found a similar item");
                         item.Quantity++;
                         return false;
                     }
@@ -129,6 +135,11 @@ namespace SelfSortingStorage.Cupboard
 
         public Data? RetrieveData(int spawnIndex, bool updateQuantity = true)
         {
+            if (Plugin.config.verboseLogging.Value)
+            {
+                Plugin.logger.LogWarning(ToString());
+                Plugin.logger.LogWarning("Retrieving item at position: " + spawnIndex);
+            }
             int place = (int)(spawnIndex / 4.0f);
             int diff = spawnIndex - (place * 4);
             if (spawnIndex > Size || place >= 4 || diff >= 4)
@@ -143,13 +154,17 @@ namespace SelfSortingStorage.Cupboard
                     ItemList[place][diff] = new Data();
                 }
             }
+            if (Plugin.config.verboseLogging.Value)
+                Plugin.logger.LogWarning(ToString());
             return result;
         }
 
         public override string ToString()
         {
             int i = 0;
-            var builder = new StringBuilder().Append("Item list:\n");
+            var builder = new StringBuilder().Append("Stored items:\n");
+            if (Size == 0)
+                return builder.Append("None\n").ToString();
             foreach (var list in ItemList)
             {
                 foreach (var item in list)

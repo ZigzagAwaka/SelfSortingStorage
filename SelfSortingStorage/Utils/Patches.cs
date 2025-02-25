@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SelfSortingStorage.Cupboard;
+using UnityEngine;
 
 namespace SelfSortingStorage.Utils
 {
@@ -10,7 +11,7 @@ namespace SelfSortingStorage.Utils
         [HarmonyPatch("SaveItemsInShip")]
         public static void SaveSmartCupboard()
         {
-            if (StartOfRound.Instance != null && !StartOfRound.Instance.IsServer)
+            if (!Plugin.config.enableSaving.Value || StartOfRound.Instance == null || !StartOfRound.Instance.IsServer)
                 return;
             string saveFile = GameNetworkManager.Instance.currentSaveFileName;
             SavingModule.Save(saveFile);
@@ -25,7 +26,7 @@ namespace SelfSortingStorage.Utils
         [HarmonyPatch("LoadShipGrabbableItems")]
         public static void LoadSmartCupboard()
         {
-            if (StartOfRound.Instance != null && !StartOfRound.Instance.IsServer)
+            if (!Plugin.config.enableSaving.Value || StartOfRound.Instance == null || !StartOfRound.Instance.IsServer)
                 return;
             string saveFile = GameNetworkManager.Instance.currentSaveFileName;
             SavingModule.Load(saveFile);
@@ -35,9 +36,14 @@ namespace SelfSortingStorage.Utils
         [HarmonyPatch("ResetShip")]
         public static void ResetSmartCupboard()
         {
-            if ((StartOfRound.Instance != null && !StartOfRound.Instance.IsServer) || (SmartMemory.Instance == null || SmartMemory.Instance.Size == 0))
+            if (StartOfRound.Instance == null || !StartOfRound.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return;
-            SmartMemory.Instance.Clear();
+            var cupboard = Object.FindObjectOfType<SmartCupboard>();
+            if (cupboard == null)
+                return;
+            SmartMemory.Instance.ClearAll();
+            cupboard.placedItems.Clear();
+            Plugin.logger.LogInfo("Smart Cupboard was reseted due to a game over.");
         }
     }
 
@@ -49,11 +55,27 @@ namespace SelfSortingStorage.Utils
         [HarmonyPatch("DespawnPropsAtEndOfRound")]
         public static void ResetSmartCupboardIfAllDeads()
         {
-            if ((RoundManager.Instance != null && !RoundManager.Instance.IsServer) || (SmartMemory.Instance == null || SmartMemory.Instance.Size == 0))
+            if (RoundManager.Instance == null || !RoundManager.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return;
-            if (!StartOfRound.Instance.allPlayersDead)
+            if (StartOfRound.Instance == null || !StartOfRound.Instance.allPlayersDead)
                 return;
-            SmartMemory.Instance.Clear();
+            int spawnIndex = 0;
+            var cupboard = Object.FindObjectOfType<SmartCupboard>();
+            if (cupboard == null)
+                return;
+            foreach (var list in SmartMemory.Instance.ItemList)
+            {
+                foreach (var item in list)
+                {
+                    if (item.IsValid() && item.Value != 0)
+                    {
+                        item.Id = "INVALID";
+                        cupboard.placedItems.Remove(spawnIndex);
+                    }
+                    spawnIndex++;
+                }
+            }
+            Plugin.logger.LogInfo("Smart Cupboard stored scraps were removed due to all players being dead.");
         }
     }
 }
