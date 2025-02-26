@@ -99,7 +99,7 @@ namespace SelfSortingStorage.Cupboard
                 CacheItems.TryAdd(item.modName + "/" + item.item.itemName, item.item);
         }
 
-        public bool StoreData(Data data, out int spawnIndex)
+        public bool StoreData(Data data, out int spawnIndex, bool freeSpaceOnly = false)
         {
             spawnIndex = 0;
             if (Plugin.config.verboseLogging.Value)
@@ -119,7 +119,7 @@ namespace SelfSortingStorage.Cupboard
                         Size++;
                         return true;
                     }
-                    else if (item.IsValid() && item.Id == data.Id)
+                    else if (!freeSpaceOnly && item.IsValid() && item.Id == data.Id)
                     {
                         if (Plugin.config.verboseLogging.Value)
                             Plugin.logger.LogWarning("Found a similar item");

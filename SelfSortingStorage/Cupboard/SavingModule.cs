@@ -36,7 +36,7 @@ namespace SelfSortingStorage.Cupboard
             var items = itemsRaw.ToArray();
             foreach (var item in items)
             {
-                SmartMemory.Instance.StoreData(item, out _);
+                SmartMemory.Instance.StoreData(item, out _, true);
             }
             cupboard.StartCoroutine(cupboard.ReloadPlacedItems());
             Plugin.logger.LogInfo("SmartCupboard items loaded.");
