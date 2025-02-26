@@ -36,7 +36,7 @@ The storage will then sort these tools and put them on display in specific secti
 ##
 
 ### How to add custom trigger validation
-**For items developers!** If you want to add a custom "condition" to your scraps and tools, so the Smart Cupboard will not accept them, you can do so easily by adding this mod as a soft dependency and then write this code :
+**For items developers!** By default, every items are allowed in the storage but if you want to add a custom "condition" to your scraps and tools, so the Smart Cupboard will not accept them, you can do so easily by adding this mod as a soft dependency and then write this code :
 
 ```cs
 public static void AddValidation()
