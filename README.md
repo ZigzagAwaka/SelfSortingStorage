@@ -1,4 +1,4 @@
-# SelfSortingStorage
+# Self Sorting Storage
 
 This is the repository for the "SelfSortingStorage" Lethal Company mod.
 

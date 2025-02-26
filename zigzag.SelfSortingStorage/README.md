@@ -1,16 +1,31 @@
-# SelfSortingStorage WIP
+# Self Sorting Storage
 
-This mod will randomized the selected moon every day **upon using the ship's lever** !
+Adds a new unlockable ship ugrade to the game : the Smart Cupboard!
 
-You don't need to route to a moon with the terminal, just use the ship's lever and the ship will route to a random moon before loading it, this can make the game more difficult...
+This storage container who looks a lot like the vanilla Cupboard furniture, has the effect to automatically sorts equipment items that you store in.
 
-When there is 0 days left for the profit quota, it will always route to the Company Building.
+Compatible with v69 of Lethal Company.
 
-Compatible with v62/v64/v69 of Lethal Company.
+##
 
-![Preview](https://raw.githubusercontent.com/ZigzagAwaka/RandomMoonFX/main/preview.gif)
+### Smart Cupboard
+On the side of this special Cupboard, you can find a storage box where players can dump their tools like flashlights, walkie-talkies, shovels, spray paints and more.
 
-![Preview](https://raw.githubusercontent.com/ZigzagAwaka/RandomMoonFX/main/preview2.gif)
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview2.PNG)
+
+The storage will then sort these tools and put them on display in specific sections. Then all items will be organized and ready for players to grab and go!
+
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview1.PNG)
+
+### More info
+- If you dump multiples copies of the same item, the storage will have them all stacked on top of each other. BUT 
+
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview3.gif)
+
+##
+
+### More info
+- If you dump multiples copies of the same item, the storage will have them all stacked on top of each other. BUT 
 
 ##
 
