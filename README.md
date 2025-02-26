@@ -2,7 +2,9 @@
 
 This is the repository for the "SelfSortingStorage" Lethal Company mod.
 
-In a "Work in progress" state, this page will be updated later
+You can post some suggestions or issues in the 'Issues' tab.
+
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview1.PNG)
 
 ## More info
 You can check more info on Thunderstore:
