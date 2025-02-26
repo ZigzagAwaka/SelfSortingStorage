@@ -30,7 +30,7 @@ The storage will then sort these tools and put them on display in specific secti
 - If you dump a big item in the box, it will be rescaled to fit nicely in the storage!
 - You can customize a lot of things in the config file (such as the price and the color of the cupboard).
 
-#### Planed features
+#### Planned features
 - New configs that will allow you to specify in which storage row some items are going to be stored.
 
 ##
@@ -65,7 +65,7 @@ If you want to suggest new features or contact me please go to the mod release p
 
 # Credits
 
-- Thanks [Xu Xiaolan](https://thunderstore.io/c/lethal-company/p/XuXiaolan/) for helping with some parts of the code, and also for suggesting good things!
+- Thanks [Xu Xiaolan](https://www.youtube.com/shorts/Kt5mnWK-rgI) for helping with some parts of the code, and also for suggesting good things!
 
 - Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial idea and for testing!
 
