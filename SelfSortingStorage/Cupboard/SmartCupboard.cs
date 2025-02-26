@@ -151,20 +151,20 @@ namespace SelfSortingStorage.Cupboard
             if (item != null)
             {
                 GetPlacePosition(spawnIndex, out var position, out var rotation);
-                var itemRef = Effects.SpawnItem(item, position, rotation, parentObject.transform, itemData.Value);
-                SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, spawnIndex, isStacked);
+                var itemRef = Effects.SpawnItem(item, position, rotation, parentObject.transform, itemData.Value, itemData.Save);
+                SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, itemRef.save, spawnIndex, isStacked);
             }
         }
 
         [ClientRpc]
-        private void SyncItemClientRpc(NetworkObjectReference itemRef, int value, int spawnIndex, bool isStacked)
+        private void SyncItemClientRpc(NetworkObjectReference itemRef, int value, int save, int spawnIndex, bool isStacked)
         {
-            StartCoroutine(SyncItem(itemRef, value, spawnIndex, isStacked));
+            StartCoroutine(SyncItem(itemRef, value, save, spawnIndex, isStacked));
         }
 
-        private IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int spawnIndex, bool isStacked)
+        private IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save, int spawnIndex, bool isStacked)
         {
-            yield return Effects.SyncItem(itemRef, value);
+            yield return Effects.SyncItem(itemRef, value, save);
             if (itemRef.TryGet(out var itemNetObject))
             {
                 var component = itemNetObject.GetComponent<GrabbableObject>();

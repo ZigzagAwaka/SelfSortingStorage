@@ -3,6 +3,7 @@ using SelfSortingStorage.Cupboard;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,14 +15,41 @@ namespace SelfSortingStorage.Utils
         {
             public NetworkObjectReference netObjectRef;
             public int value;
+            public int save;
 
-            public ItemNetworkReference(NetworkObjectReference netObjectRef, int value)
+            public ItemNetworkReference(NetworkObjectReference netObjectRef, int value, int save)
             {
                 this.netObjectRef = netObjectRef;
                 this.value = value;
+                this.save = save;
             }
         }
 
+
+        public static void SetupNetwork()
+        {
+            IEnumerable<System.Type> types;
+            try
+            {
+                types = Assembly.GetExecutingAssembly().GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                types = e.Types.Where(t => t != null);
+            }
+            foreach (var type in types)
+            {
+                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                foreach (var method in methods)
+                {
+                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                    if (attributes.Length > 0)
+                    {
+                        method.Invoke(null, null);
+                    }
+                }
+            }
+        }
 
         public static void Message(string title, string bottom, bool warning = false)
         {
@@ -62,7 +90,7 @@ namespace SelfSortingStorage.Utils
                 return SmartMemory.CacheItems.GetValueOrDefault(id);
         }
 
-        public static ItemNetworkReference SpawnItem(Item item, Vector3 position, Quaternion rotation, Transform? parent = null, int value = 0)
+        public static ItemNetworkReference SpawnItem(Item item, Vector3 position, Quaternion rotation, Transform? parent = null, int value = 0, int save = 0)
         {
             if (parent == null)
                 parent = RoundManager.Instance.spawnedScrapContainer ?? StartOfRound.Instance.elevatorTransform;
@@ -75,11 +103,13 @@ namespace SelfSortingStorage.Utils
             component.reachedFloorTarget = true;
             if (item.isScrap)
                 component.scrapValue = value;
+            if (item.saveItemVariable)
+                component.LoadItemSaveData(save);
             component.NetworkObject.Spawn();
-            return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), component.scrapValue);
+            return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), component.scrapValue, save);
         }
 
-        public static IEnumerator SyncItem(NetworkObjectReference itemRef, int value)
+        public static IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save)
         {
             NetworkObject? itemNetObject = null;
             float startTime = Time.realtimeSinceStartup;
@@ -96,6 +126,8 @@ namespace SelfSortingStorage.Utils
             GrabbableObject component = itemNetObject.GetComponent<GrabbableObject>();
             if (component.itemProperties.isScrap)
                 component.SetScrapValue(value);
+            if (component.itemProperties.saveItemVariable)
+                component.LoadItemSaveData(save);
             component.fallTime = 0f;
         }
 

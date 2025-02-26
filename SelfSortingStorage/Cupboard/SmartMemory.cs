@@ -13,6 +13,7 @@ namespace SelfSortingStorage.Cupboard
         {
             public string Id = "INVALID";
             public int Value = 0;
+            public int Save = 0;
             public int Quantity = 1;
 
             public Data() { }
@@ -22,6 +23,8 @@ namespace SelfSortingStorage.Cupboard
                 Id = ConvertID(item.itemProperties);
                 if (item.itemProperties.isScrap)
                     Value = item.scrapValue;
+                if (item.itemProperties.saveItemVariable)
+                    Save = item.GetItemDataToSave();
             }
 
             public bool IsValid()
@@ -33,6 +36,7 @@ namespace SelfSortingStorage.Cupboard
             {
                 Id = data.Id;
                 Value = data.Value;
+                Save = data.Save;
                 Quantity = data.Quantity;
             }
 
@@ -50,6 +54,7 @@ namespace SelfSortingStorage.Cupboard
             {
                 serializer.SerializeValue(ref Id);
                 serializer.SerializeValue(ref Value);
+                serializer.SerializeValue(ref Save);
                 serializer.SerializeValue(ref Quantity);
             }
         }

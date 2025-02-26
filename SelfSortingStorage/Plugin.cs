@@ -4,9 +4,9 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using LethalLib.Extras;
 using LethalLib.Modules;
+using SelfSortingStorage.Utils;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -25,31 +25,6 @@ namespace SelfSortingStorage
         internal static Config config { get; private set; } = null!;
         internal const string VANILLA_NAME = "LethalCompanyGame";
         internal readonly static List<(System.Func<PlayerControllerB, bool>, string)> spTriggerValidations = new List<(System.Func<PlayerControllerB, bool>, string)>();
-
-        private static void SetupNetwork()
-        {
-            IEnumerable<System.Type> types;
-            try
-            {
-                types = Assembly.GetExecutingAssembly().GetTypes();
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                types = e.Types.Where(t => t != null);
-            }
-            foreach (var type in types)
-            {
-                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (var method in methods)
-                {
-                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        method.Invoke(null, null);
-                    }
-                }
-            }
-        }
 
         void HarmonyPatchAll()
         {
@@ -70,12 +45,24 @@ namespace SelfSortingStorage
 
             config = new Config(Config);
             config.SetupCustomConfigs();
-            SetupNetwork();
+            Effects.SetupNetwork();
 
+            var sssPrefab = sssUnlockable.unlockable.prefabObject;
             ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor);
-            sssUnlockable.unlockable.prefabObject.GetComponent<MeshRenderer>().materials[0].color = customColor;
-            NetworkPrefabs.RegisterNetworkPrefab(sssUnlockable.unlockable.prefabObject);
-            Utilities.FixMixerGroups(sssUnlockable.unlockable.prefabObject);
+            sssPrefab.GetComponent<MeshRenderer>().materials[0].color = customColor;
+            if (config.boxPosition.Value == "R")
+            {
+                var boxTransform = sssPrefab.transform.Find("ChutePosition/ActualPos");
+                var pos2Transform = sssPrefab.transform.Find("ChutePosition/Pos2");
+                if (boxTransform != null && pos2Transform != null)
+                {
+                    boxTransform.position = pos2Transform.position;
+                    boxTransform.rotation = pos2Transform.rotation;
+                }
+            }
+
+            NetworkPrefabs.RegisterNetworkPrefab(sssPrefab);
+            Utilities.FixMixerGroups(sssPrefab);
             Unlockables.RegisterUnlockable(sssUnlockable, config.cupboardPrice.Value, StoreType.ShipUpgrade);
 
             HarmonyPatchAll();
