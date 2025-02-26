@@ -1,15 +1,17 @@
 # Self Sorting Storage
 
-Adds a new unlockable ship ugrade to the game : the Smart Cupboard!
+Adds a new unlockable ship ugrade to the game : the **Smart Cupboard**!
 
 This storage container who looks a lot like the vanilla Cupboard furniture, has the effect to automatically sorts equipment items that you store in.
+
+The Smart Cupboard can be acquired by spending 20 credits in the store.
 
 Compatible with v69 of Lethal Company.
 
 ##
 
-### Smart Cupboard
-On the side of this special Cupboard, you can find a storage box where players can dump their tools like flashlights, walkie-talkies, shovels, spray paints and more.
+### How to use
+On the side of this special Cupboard, you can find a storage box where players can dump their tools like flashlights, walkie-talkies, shovels, spray paints and even scrap items.
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview2.PNG)
 
@@ -17,45 +19,45 @@ The storage will then sort these tools and put them on display in specific secti
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview1.PNG)
 
-### More info
-- If you dump multiples copies of the same item, the storage will have them all stacked on top of each other. BUT 
+### Multiple copies of one item
+- If you dump multiples copies of the same item, the storage will have them all 'visually' stacked on top of each other.
+- In vanilla, having a lot of items in the ship can sometimes cause some lags. But with this mod installed, all subsequent copies of the same item are going to be stored in the Cupboard's memory. So, you will no longer have lag issues for buying 30+ flashlights!
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview3.gif)
 
+### Other features
+- All items stored in the Smart Cupboard are saved in the host player's current save file.
+- If you dump a big item in the box, it will be rescaled to fit nicely in the storage!
+- You can customize a lot of things in the config file (such as the price and the color of the cupboard).
+
+#### Planed features
+- New configs that will allow you to specify in which storage row some items are going to be stored.
+
 ##
 
-### More info
-- If you dump multiples copies of the same item, the storage will have them all stacked on top of each other. BUT 
+### How to add custom trigger validation
+**For items developers!** If you want to add a custom "condition" to your scraps and tools, so the Smart Cupboard will not accept them, you can do so easily by adding this mod as a soft dependency and then write this code :
+
+```cs
+public static void AddValidation()
+{
+    SelfSortingStorage.Cupboard.SmartCupboard.AddTriggerValidation(MyCustomValidation, "[Your custom message]");
+    // the custom message is displayed when a player tries to store something checked by your condition
+}
+
+private static bool MyCustomValidation(PlayerControllerB player)
+{
+    var item = player.currentlyHeldObjectServer;
+    if (item is MyCustomItem)  // check your item
+        return false;  // don't store the item
+    return true;  // allow the item to be stored
+}
+```
 
 ##
 
-### Compatibility
-- This mod is compatible with [LethalLevelLoader](https://thunderstore.io/c/lethal-company/p/IAmBatby/LethalLevelLoader/) and works with any custom moon that uses this API.
-- Compatible with [Celestial_Tint](https://thunderstore.io/c/lethal-company/p/sfDesat/Celestial_Tint/) and [Chameleon](https://thunderstore.io/c/lethal-company/p/ButteryStancakes/Chameleon/) special routing animations.
-- Compatibility with [Wesleys_Moons](https://thunderstore.io/c/lethal-company/p/Magic_Wesley/Wesleys_Moons/): the chosen moon on the last day will be Galetry instead of Gordion
-- Works well with the better screens feature of [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/).
-- No issues from the ship's lever fix of [LethalFixes](https://thunderstore.io/c/lethal-company/p/Dev1A3/LethalFixes/).
-- Compatible with [LethalConstellations](https://thunderstore.io/c/lethal-company/p/darmuh/LethalConstellations/) so that the moon is chosen from the current constellation
-- Quota rollover mods are supported with the config `Quota check = false`
-
-### Not compatible with
-- [InfectedCompany](https://thunderstore.io/c/lethal-company/p/InfectedCompany/InfectedCompany/) : causes some infected players desyncs (I think?)
-
-### Features
-This mod is an upgrade of the original **RandomMoon** mod and adds some bug fixes and improvements to make it compatible with the latest game updates.
-- Uses the ship's routing animation before the start of the level
-- Configurable time for the routing animation, other than the default values
-- A config to make moons only be chosen once, will reset if every moons have been visited (false by default)
-- Configurable moons blacklist to prevent specific moons to be chosen randomly
-- Synchronize the chosen moon info on the ship's monitor
-- Removes the 'Halt!' warning on the last day when auto routing to the Company Building
-- Prevent the random selection of Gordion before the last day of the quota
-- Prevent the random selection of Liquidation since the moon is disabled in vanilla (fixed a softlock)
-- A config to have all moons free even if you disable random moons
-- Updated to the latest version of the game and compatible with LLL to avoid any desync between players
-
-### Contact
-If you want to suggest new features or contact me please go to the mod page in the [modding discord](https://discord.com/invite/lcmod).
+### Contact & Feedback
+If you want to suggest new features or contact me please go to the mod release page in the [modding discord](https://discord.gg/XeyYqRdRGC) or as a [github issue](https://github.com/ZigzagAwaka/SelfSortingStorage).
 
 ###
 
@@ -63,4 +65,14 @@ If you want to suggest new features or contact me please go to the mod page in t
 
 # Credits
 
-Original mod created by of [Beepsterr](https://thunderstore.io/c/lethal-company/p/Beepsterr/RandomMoon/)
+- Thanks [Xu Xiaolan](https://thunderstore.io/c/lethal-company/p/XuXiaolan/) for helping with some parts of the code, and also for suggesting good things!
+
+- Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial idea and for testing!
+
+- Some parts ot the code is based on the [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) implementation by [WarperSan](https://thunderstore.io/c/lethal-company/p/WarperSan/), such as the items data structure.
+    - ShipInventory is already a very well complete mod, so having my implementation follows the one by WarperSan not only ensure proper compatibility with modded items but also allows a similar behavior, which is perfect for already established users.
+    - The base code has been modified to better fit the SelfSortingStorage mod.
+
+- Cupboard asset is ripped from [Lethal Company](https://store.steampowered.com/app/1966720/Lethal_Company/).
+
+- "vent_chute" by [jazz-the-giraffe](https://sketchfab.com/3d-models/vent-chute-961b5fb81e694f94ab1407028c7dc998) is a free 3D model licensed under Creative Commons Attribution.
