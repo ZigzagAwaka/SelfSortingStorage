@@ -142,9 +142,11 @@ namespace SelfSortingStorage.Cupboard
             }
             int place = (int)(spawnIndex / 4.0f);
             int diff = spawnIndex - (place * 4);
-            if (spawnIndex > Size || place >= 4 || diff >= 4)
+            if (place >= 4 || diff >= 4)
                 return null;
             var result = ItemList[place][diff];
+            if (!result.IsValid())
+                return null;
             if (updateQuantity)
             {
                 result.Quantity--;

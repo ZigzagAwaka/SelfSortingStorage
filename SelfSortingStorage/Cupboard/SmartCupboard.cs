@@ -178,7 +178,7 @@ namespace SelfSortingStorage.Cupboard
                         var collider = component.GetComponent<BoxCollider>();
                         if (collider == null)
                             yield break;
-                        ScaleItemClientRpc(itemRef, true, collider.bounds.size);
+                        ScaleItemClientRpc(itemRef, true, collider.bounds.extents);
                     }
                 }
             }
@@ -194,13 +194,13 @@ namespace SelfSortingStorage.Cupboard
         }
 
         [ClientRpc]
-        private void ScaleItemClientRpc(NetworkObjectReference itemRef, bool scaleMode, Vector3 bounds = default, ClientRpcParams clientRpcParams = default)
+        private void ScaleItemClientRpc(NetworkObjectReference itemRef, bool scaleMode, Vector3 size = default, bool overrideOriginalScale = false, ClientRpcParams clientRpcParams = default)
         {
             if (Plugin.config.rescaleItems.Value)
-                StartCoroutine(ScaleItem(itemRef, scaleMode, bounds));
+                StartCoroutine(ScaleItem(itemRef, scaleMode, size, overrideOriginalScale));
         }
 
-        private IEnumerator ScaleItem(NetworkObjectReference itemRef, bool scaleMode, Vector3 bounds)
+        private IEnumerator ScaleItem(NetworkObjectReference itemRef, bool scaleMode, Vector3 size, bool overrideOriginalScale)
         {
             if (scaleMode)
             {
@@ -210,7 +210,10 @@ namespace SelfSortingStorage.Cupboard
                 var component = itemNetObject.GetComponent<GrabbableObject>();
                 while (component.originalScale == Vector3.zero)  // wait for item to start (set originalScale)
                     yield return new WaitForSeconds(0.03f);
-                Effects.RescaleItemIfTooBig(component, bounds);
+                if (!overrideOriginalScale)
+                    Effects.RescaleItemIfTooBig(component, size);
+                else
+                    Effects.OverrideOriginalScale(component, size);
             }
             else
             {
@@ -242,10 +245,7 @@ namespace SelfSortingStorage.Cupboard
             {
                 if (!item.isHeld && !item.isHeldByEnemy)
                 {
-                    var collider = item.GetComponent<BoxCollider>();
-                    if (collider == null)
-                        continue;
-                    ScaleItemClientRpc(item.gameObject.GetComponent<NetworkObject>(), true, collider.bounds.size, clientRpcParams);
+                    ScaleItemClientRpc(item.gameObject.GetComponent<NetworkObject>(), true, item.originalScale, true, clientRpcParams);
                 }
             }
         }

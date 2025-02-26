@@ -104,18 +104,18 @@ namespace SelfSortingStorage.Utils
             var collider = component.GetComponent<BoxCollider>();
             if (collider == null)
                 return;
-            RescaleItemIfTooBig(component, collider.bounds.size);
+            RescaleItemIfTooBig(component, collider.bounds.extents);
         }
 
-        public static void RescaleItemIfTooBig(GrabbableObject component, Vector3 bounds)
+        public static void RescaleItemIfTooBig(GrabbableObject component, Vector3 size)
         {
             var collider = component.GetComponent<BoxCollider>();
-            if (collider == null)
+            if (collider == null || size == null)
                 return;
-            var newSize = 60 * component.transform.localScale / 100;
-            if (bounds != null && (bounds.x > 0.7f || bounds.y > 0.5f || bounds.z > 0.7f))
+            var volume = (size.x * 2) * (size.y * 2) * (size.z * 2);
+            if (volume > 0.08f)
             {
-                component.transform.localScale = newSize;
+                component.transform.localScale = (volume < 1f ? (0.07f * 100 / volume) : 20) * component.transform.localScale / 100;
                 if (Plugin.config.verboseLogging.Value)
                     Plugin.logger.LogInfo("Item was rescaled");
             }
@@ -124,6 +124,11 @@ namespace SelfSortingStorage.Utils
         public static void ScaleBackItem(GrabbableObject component)
         {
             component.transform.localScale = component.originalScale;
+        }
+
+        public static void OverrideOriginalScale(GrabbableObject component, Vector3 value)
+        {
+            component.originalScale = value;
         }
     }
 }
