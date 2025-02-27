@@ -71,6 +71,7 @@ namespace SelfSortingStorage.Utils
                     if (item.IsValid() && item.Values[0] != 0)
                     {
                         item.Id = "INVALID";
+                        SmartMemory.Instance.Size--;
                         cupboard.placedItems.Remove(spawnIndex);
                     }
                     spawnIndex++;

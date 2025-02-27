@@ -66,6 +66,11 @@ namespace SelfSortingStorage.Utils
                     notValidText = "[Bodies not allowed]";
                     return false;
                 }
+                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Belt bag")
+                {
+                    notValidText = "[Belt bags not compatible]";
+                    return false;
+                }
                 if (!Plugin.config.allowScrapItems.Value && player.currentlyHeldObjectServer.itemProperties.isScrap)
                 {
                     notValidText = "[Scraps not allowed]";
@@ -129,6 +134,7 @@ namespace SelfSortingStorage.Utils
             }
             yield return new WaitForEndOfFrame();
             GrabbableObject component = itemNetObject.GetComponent<GrabbableObject>();
+            component.isInShipRoom = true;
             if (component.itemProperties.isScrap)
                 component.SetScrapValue(value);
             if (component.itemProperties.saveItemVariable)
