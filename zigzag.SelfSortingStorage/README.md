@@ -21,7 +21,7 @@ The storage will then sort these tools and put them on display in specific secti
 
 ### Multiple copies of one item
 - If you dump multiples copies of the same item, the storage will have them all 'visually' stacked on top of each other.
-- In vanilla, having a lot of items in the ship can sometimes cause some lags. But with this mod installed, all subsequent copies of the same item are going to be stored in the Cupboard's memory. So, you will no longer have lag issues for buying 30+ flashlights!
+- In vanilla, having a lot of items in the ship can sometimes cause some lags. But with this mod installed, all subsequent copies of the same item are going to be stored in the Cupboard's memory. So, you will no longer have lag issues for buying 30+ shovels!
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Preview3.gif)
 
