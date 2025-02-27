@@ -111,12 +111,14 @@ namespace SelfSortingStorage.Utils
             component.fallTime = 1f;
             component.hasHitGround = true;
             component.reachedFloorTarget = true;
-            if (item.isScrap)
-                component.scrapValue = value;
-            if (item.saveItemVariable)
+            component.isInElevator = true;
+            component.isInShipRoom = true;
+            if (component.itemProperties.isScrap)
+                component.SetScrapValue(value);
+            if (component.itemProperties.saveItemVariable)
                 component.LoadItemSaveData(save);
             component.NetworkObject.Spawn();
-            return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), value, save);
+            return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), value, component.itemProperties.saveItemVariable ? component.GetItemDataToSave() : save);
         }
 
         public static IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save)
@@ -134,6 +136,7 @@ namespace SelfSortingStorage.Utils
             }
             yield return new WaitForEndOfFrame();
             GrabbableObject component = itemNetObject.GetComponent<GrabbableObject>();
+            component.isInElevator = true;
             component.isInShipRoom = true;
             if (component.itemProperties.isScrap)
                 component.SetScrapValue(value);
