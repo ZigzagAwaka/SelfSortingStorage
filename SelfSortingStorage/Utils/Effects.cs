@@ -61,6 +61,11 @@ namespace SelfSortingStorage.Utils
             notValidText = "[Nothing to store]";
             if (player.isHoldingObject && !player.isGrabbingObjectAnimation && player.currentlyHeldObjectServer != null)
             {
+                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Body")
+                {
+                    notValidText = "[Bodies not allowed]";
+                    return false;
+                }
                 if (!Plugin.config.allowScrapItems.Value && player.currentlyHeldObjectServer.itemProperties.isScrap)
                 {
                     notValidText = "[Scraps not allowed]";
@@ -106,7 +111,7 @@ namespace SelfSortingStorage.Utils
             if (item.saveItemVariable)
                 component.LoadItemSaveData(save);
             component.NetworkObject.Spawn();
-            return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), component.scrapValue, save);
+            return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), value, save);
         }
 
         public static IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save)

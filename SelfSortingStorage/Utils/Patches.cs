@@ -68,7 +68,7 @@ namespace SelfSortingStorage.Utils
             {
                 foreach (var item in list)
                 {
-                    if (item.IsValid() && item.Value != 0)
+                    if (item.IsValid() && item.Values[0] != 0)
                     {
                         item.Id = "INVALID";
                         cupboard.placedItems.Remove(spawnIndex);

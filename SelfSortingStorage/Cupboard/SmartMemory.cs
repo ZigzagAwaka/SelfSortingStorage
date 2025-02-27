@@ -12,8 +12,8 @@ namespace SelfSortingStorage.Cupboard
         public class Data
         {
             public string Id = "INVALID";
-            public int Value = 0;
-            public int Save = 0;
+            public List<int> Values = new List<int>();
+            public List<int> Saves = new List<int>();
             public int Quantity = 1;
 
             public Data() { }
@@ -21,10 +21,8 @@ namespace SelfSortingStorage.Cupboard
             public Data(GrabbableObject item)
             {
                 Id = ConvertID(item.itemProperties);
-                if (item.itemProperties.isScrap)
-                    Value = item.scrapValue;
-                if (item.itemProperties.saveItemVariable)
-                    Save = item.GetItemDataToSave();
+                Values.Add(item.itemProperties.isScrap ? item.scrapValue : 0);
+                Saves.Add(item.itemProperties.saveItemVariable ? item.GetItemDataToSave() : 0);
             }
 
             public bool IsValid()
@@ -35,8 +33,10 @@ namespace SelfSortingStorage.Cupboard
             public void Update(Data data)
             {
                 Id = data.Id;
-                Value = data.Value;
-                Save = data.Save;
+                Values.Clear();
+                Values.AddRange(data.Values);
+                Saves.Clear();
+                Saves.AddRange(data.Saves);
                 Quantity = data.Quantity;
             }
 
@@ -53,8 +53,32 @@ namespace SelfSortingStorage.Cupboard
             public void NetworkerSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
             {
                 serializer.SerializeValue(ref Id);
-                serializer.SerializeValue(ref Value);
-                serializer.SerializeValue(ref Save);
+                if (serializer.IsWriter)
+                {
+                    var writter = serializer.GetFastBufferWriter();
+                    writter.WriteValueSafe(Values.Count);
+                    foreach (var value in Values)
+                        writter.WriteValueSafe(value);
+                    writter.WriteValueSafe(Saves.Count);
+                    foreach (var save in Saves)
+                        writter.WriteValueSafe(save);
+                }
+                if (serializer.IsReader)
+                {
+                    var reader = serializer.GetFastBufferReader();
+                    reader.ReadValueSafe(out int count);
+                    for (var i = 0; i < count; i++)
+                    {
+                        reader.ReadValueSafe(out int value);
+                        Values.Add(value);
+                    }
+                    reader.ReadValueSafe(out count);
+                    for (var i = 0; i < count; i++)
+                    {
+                        reader.ReadValueSafe(out int save);
+                        Saves.Add(save);
+                    }
+                }
                 serializer.SerializeValue(ref Quantity);
             }
         }
@@ -63,6 +87,7 @@ namespace SelfSortingStorage.Cupboard
         public static SmartMemory? Instance;
         public readonly int Capacity = 16;
         public int Size = 0;
+        public readonly List<int> IgnoreSpaces = new List<int>();
         public readonly List<List<Data>> ItemList = new List<List<Data>>(4);
         public readonly static Dictionary<string, Item> CacheItems = new Dictionary<string, Item>();
 
@@ -106,33 +131,49 @@ namespace SelfSortingStorage.Cupboard
 
         public bool StoreData(Data data, out int spawnIndex, bool freeSpaceOnly = false)
         {
-            spawnIndex = 0;
             if (Plugin.config.verboseLogging.Value)
             {
                 Plugin.logger.LogWarning(ToString());
                 Plugin.logger.LogWarning("Storing: " + data.Id);
             }
+            spawnIndex = 0;
+            var lastFreeSpaceId = -1;
             foreach (var list in ItemList)
             {
                 foreach (var item in list)
                 {
-                    if (!item.IsValid())
+                    if (!item.IsValid() && lastFreeSpaceId == -1)
                     {
-                        if (Plugin.config.verboseLogging.Value)
-                            Plugin.logger.LogWarning("Found 1 free space");
-                        item.Update(data);
-                        Size++;
-                        return true;
+                        lastFreeSpaceId = spawnIndex;
+                        if (IgnoreSpaces.Count > 0 && IgnoreSpaces.Exists(e => e == lastFreeSpaceId))
+                            lastFreeSpaceId = -1;
+                        else if (freeSpaceOnly)
+                            break;
                     }
                     else if (!freeSpaceOnly && item.IsValid() && item.Id == data.Id)
                     {
                         if (Plugin.config.verboseLogging.Value)
                             Plugin.logger.LogWarning("Found a similar item");
+                        item.Values.Add(data.Values[0]);
+                        item.Saves.Add(data.Saves[0]);
                         item.Quantity++;
                         return false;
                     }
                     spawnIndex++;
                 }
+                if (freeSpaceOnly && lastFreeSpaceId != -1)
+                    break;
+            }
+            if (lastFreeSpaceId != -1)
+            {
+                if (Plugin.config.verboseLogging.Value)
+                    Plugin.logger.LogWarning("Found 1 free space");
+                spawnIndex = lastFreeSpaceId;
+                int place = (int)(lastFreeSpaceId / 4.0f);
+                int diff = lastFreeSpaceId - (place * 4);
+                ItemList[place][diff].Update(data);
+                Size++;
+                return true;
             }
             Plugin.logger.LogError("SmartCupboard was full when " + data.Id + " tried to be stored.");
             return false;
@@ -154,6 +195,8 @@ namespace SelfSortingStorage.Cupboard
                 return null;
             if (updateQuantity)
             {
+                result.Values.RemoveAt(0);
+                result.Saves.RemoveAt(0);
                 result.Quantity--;
                 if (result.Quantity <= 0)
                 {

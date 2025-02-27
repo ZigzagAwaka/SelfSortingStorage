@@ -151,7 +151,7 @@ namespace SelfSortingStorage.Cupboard
             if (item != null)
             {
                 GetPlacePosition(spawnIndex, out var position, out var rotation);
-                var itemRef = Effects.SpawnItem(item, position, rotation, parentObject.transform, itemData.Value, itemData.Save);
+                var itemRef = Effects.SpawnItem(item, position, rotation, parentObject.transform, itemData.Values[0], itemData.Saves[0]);
                 SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, itemRef.save, spawnIndex, isStacked);
             }
         }

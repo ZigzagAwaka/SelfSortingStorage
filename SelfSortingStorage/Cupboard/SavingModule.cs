@@ -33,11 +33,17 @@ namespace SelfSortingStorage.Cupboard
                 Plugin.logger.LogError("Items from SmartCupboard could not be loaded.");
                 return;
             }
+            var spawnIndex = 0;
             var items = itemsRaw.ToArray();
             foreach (var item in items)
             {
-                SmartMemory.Instance.StoreData(item, out _, true);
+                if (item.IsValid())
+                    SmartMemory.Instance.StoreData(item, out _, true);
+                else
+                    SmartMemory.Instance.IgnoreSpaces.Add(spawnIndex);
+                spawnIndex++;
             }
+            SmartMemory.Instance.IgnoreSpaces.Clear();
             cupboard.StartCoroutine(cupboard.ReloadPlacedItems());
             Plugin.logger.LogInfo("SmartCupboard items loaded.");
         }
@@ -48,16 +54,16 @@ namespace SelfSortingStorage.Cupboard
             if (SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return false;
             var length = SmartMemory.Instance.ItemList.Count;
-            items = new SmartMemory.Data[SmartMemory.Instance.Size];
+            var itemsList = new List<SmartMemory.Data>();
             for (int i = 0; i < length; i++)
             {
                 for (int j = 0; j < length; j++)
                 {
                     var item = SmartMemory.Instance.ItemList[i][j];
-                    if (item.IsValid())
-                        items[j + i * length] = item;
+                    itemsList.Add(item);
                 }
             }
+            items = itemsList.ToArray();
             return true;
         }
     }
