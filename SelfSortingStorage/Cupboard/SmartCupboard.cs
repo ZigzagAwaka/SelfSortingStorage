@@ -15,6 +15,8 @@ namespace SelfSortingStorage.Cupboard
         public SmartMemory memory = new SmartMemory();
         public readonly Dictionary<int, GrabbableObject> placedItems = new Dictionary<int, GrabbableObject>();
         private readonly List<int> indexToRemove = new List<int>();
+        private GrabbableObject? awaitingObject = null;
+        private bool responseOnAwaiting = false;
 
         public SmartCupboard() { }
 
@@ -31,7 +33,7 @@ namespace SelfSortingStorage.Cupboard
         {
             if (GameNetworkManager.Instance != null && GameNetworkManager.Instance.localPlayerController != null)
             {
-                if (memory.IsFull())
+                if (CheckIsFull(GameNetworkManager.Instance.localPlayerController))
                 {
                     triggerScript.interactable = false;
                     triggerScript.disabledHoverTip = "[Full!]";
@@ -41,6 +43,15 @@ namespace SelfSortingStorage.Cupboard
                     triggerScript.interactable = Effects.IsTriggerValid(GameNetworkManager.Instance.localPlayerController, out var notValidText);
                     if (!triggerScript.interactable)
                         triggerScript.disabledHoverTip = notValidText;
+                }
+                if (!IsServer && awaitingObject != null)
+                {
+                    if (GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer == null ||
+                        GameNetworkManager.Instance.localPlayerController.currentlyHeldObjectServer != awaitingObject)
+                    {
+                        responseOnAwaiting = false;
+                        awaitingObject = null;
+                    }
                 }
             }
             if (IsServer)
@@ -164,7 +175,7 @@ namespace SelfSortingStorage.Cupboard
 
         private IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save, int spawnIndex, bool isStacked)
         {
-            yield return Effects.SyncItem(itemRef, value, save);
+            yield return Effects.SyncItem(itemRef, value, save, parentObject.transform);
             if (itemRef.TryGet(out var itemNetObject))
             {
                 var component = itemNetObject.GetComponent<GrabbableObject>();
@@ -222,6 +233,58 @@ namespace SelfSortingStorage.Cupboard
                     Effects.ScaleBackItem(itemNetObject.GetComponent<GrabbableObject>());
                 }
             }
+        }
+
+        private bool CheckIsFull(PlayerControllerB player)
+        {
+            if (!memory.IsFull())
+                return false;
+            if (!player.isHoldingObject || player.isGrabbingObjectAnimation || player.currentlyHeldObjectServer == null)
+                return true;
+            if (IsServer)
+                return ServerCheckingIsFull(player);
+            else
+            {
+                if (responseOnAwaiting)
+                    return false;
+                if (awaitingObject != null)
+                    return true;
+                awaitingObject = player.currentlyHeldObjectServer;
+                AskServerCheckIsFullServerRpc(player.playerClientId, player.OwnerClientId);
+                return true;
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void AskServerCheckIsFullServerRpc(ulong playerId, ulong clientId)
+        {
+            bool response;
+            var player = StartOfRound.Instance.allPlayerScripts[playerId];
+            if (player == null || player.currentlyHeldObjectServer == null)
+                response = true;
+            else
+                response = ServerCheckingIsFull(player);
+            var clientRpcParams = new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new[] { clientId } } };
+            ServerResponseCheckIsFullClientRpc(response, clientRpcParams);
+        }
+
+        private bool ServerCheckingIsFull(PlayerControllerB player)
+        {
+            foreach (var (_, item) in placedItems)
+            {
+                if (player.currentlyHeldObjectServer.itemProperties.itemName == item.itemProperties.itemName &&
+                    player.currentlyHeldObjectServer.itemProperties.name == item.itemProperties.name)
+                    return false;
+            }
+            return true;
+        }
+
+        [ClientRpc]
+        private void ServerResponseCheckIsFullClientRpc(bool response, ClientRpcParams clientRpcParams = default)
+        {
+            if (response)
+                return;
+            responseOnAwaiting = true;
         }
 
         private IEnumerator SyncCupboard()

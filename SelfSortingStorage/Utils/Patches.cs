@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SelfSortingStorage.Cupboard;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SelfSortingStorage.Utils
@@ -79,6 +80,38 @@ namespace SelfSortingStorage.Utils
             }
             if (Plugin.config.verboseLogging.Value)
                 Plugin.logger.LogInfo("Smart Cupboard stored scraps were removed due to all players being dead.");
+        }
+    }
+
+
+    [HarmonyPatch(typeof(BeltBagItem))]
+    internal class BeltBagItemPatch
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("TryAddObjectToBagServerRpc")]
+        public static bool TryAddObjectToBagServerRpcPatch(BeltBagItem __instance, NetworkObjectReference netObjectRef, int playerWhoAdded)
+        {
+            if (StartOfRound.Instance == null || !StartOfRound.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
+                return true;
+            var cupboard = Object.FindObjectOfType<SmartCupboard>();
+            if (cupboard == null || cupboard.placedItems.Count == 0)
+                return true;
+            if (netObjectRef.TryGet(out var networkObject))
+            {
+                var component = networkObject.GetComponent<GrabbableObject>();
+                if (component != null && !component.isHeld && !component.heldByPlayerOnServer && !component.isHeldByEnemy)
+                {
+                    foreach (var (_, item) in cupboard.placedItems)
+                    {
+                        if (component.itemProperties.itemName == item.itemProperties.itemName && component.transform.position == item.transform.position)
+                        {
+                            __instance.CancelAddObjectToBagClientRpc(playerWhoAdded);
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
         }
     }
 }
