@@ -124,10 +124,11 @@ namespace SelfSortingStorage.Cupboard
             player.DestroyItemInSlotAndSync(player.currentItemSlot);
         }
 
-        private void GetPlacePosition(int spawnIndex, out Vector3 position, out Quaternion rotation)
+        public void GetPlacePosition(int spawnIndex, out Transform parent, out Vector3 position, out Quaternion rotation)
         {
-            position = placePositions[spawnIndex].position;
-            rotation = placePositions[spawnIndex].rotation * Quaternion.Euler(0, 0, 180);
+            parent = placePositions[spawnIndex];
+            position = parent.position;
+            rotation = parent.rotation * Quaternion.Euler(0, 0, 180);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -161,8 +162,7 @@ namespace SelfSortingStorage.Cupboard
             var item = Effects.GetItem(itemData.Id);
             if (item != null)
             {
-                GetPlacePosition(spawnIndex, out var position, out var rotation);
-                var itemRef = Effects.SpawnItem(item, position, rotation, parentObject.transform, itemData.Values[0], itemData.Saves[0]);
+                var itemRef = Effects.SpawnItem(item, this, spawnIndex, itemData.Values[0], itemData.Saves[0]);
                 SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, itemRef.save, spawnIndex, isStacked);
             }
         }
@@ -175,7 +175,7 @@ namespace SelfSortingStorage.Cupboard
 
         private IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save, int spawnIndex, bool isStacked)
         {
-            yield return Effects.SyncItem(itemRef, value, save, parentObject.transform);
+            yield return Effects.SyncItem(itemRef, this, spawnIndex, value, save);
             if (itemRef.TryGet(out var itemNetObject))
             {
                 var component = itemNetObject.GetComponent<GrabbableObject>();

@@ -61,6 +61,11 @@ namespace SelfSortingStorage.Utils
             notValidText = "[Nothing to store]";
             if (player.isHoldingObject && !player.isGrabbingObjectAnimation && player.currentlyHeldObjectServer != null)
             {
+                if (!StartOfRound.Instance.inShipPhase && (StartOfRound.Instance.shipIsLeaving || !StartOfRound.Instance.shipHasLanded))
+                {
+                    notValidText = "[Wait for ship to " + (StartOfRound.Instance.shipIsLeaving ? "leave" : "land") + "]";
+                    return false;
+                }
                 if (player.currentlyHeldObjectServer.itemProperties.itemName == "Body")
                 {
                     notValidText = "[Bodies not allowed]";
@@ -100,8 +105,9 @@ namespace SelfSortingStorage.Utils
                 return SmartMemory.CacheItems.GetValueOrDefault(id);
         }
 
-        public static ItemNetworkReference SpawnItem(Item item, Vector3 position, Quaternion rotation, Transform? parent = null, int value = 0, int save = 0)
+        public static ItemNetworkReference SpawnItem(Item item, SmartCupboard cupboard, int spawnIndex, int value = 0, int save = 0)
         {
+            cupboard.GetPlacePosition(spawnIndex, out var parent, out var position, out var rotation);
             GameObject gameObject = Object.Instantiate(item.spawnPrefab, position, rotation, parent ?? StartOfRound.Instance.elevatorTransform);
             GrabbableObject component = gameObject.GetComponent<GrabbableObject>();
             component.transform.rotation = Quaternion.Euler(component.itemProperties.restingRotation);
@@ -119,7 +125,7 @@ namespace SelfSortingStorage.Utils
             return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), value, component.itemProperties.saveItemVariable ? component.GetItemDataToSave() : save);
         }
 
-        public static IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save, Transform? parent = null)
+        public static IEnumerator SyncItem(NetworkObjectReference itemRef, SmartCupboard cupboard, int spawnIndex, int value, int save)
         {
             NetworkObject? itemNetObject = null;
             float startTime = Time.realtimeSinceStartup;
@@ -134,13 +140,25 @@ namespace SelfSortingStorage.Utils
             }
             yield return new WaitForEndOfFrame();
             GrabbableObject component = itemNetObject.GetComponent<GrabbableObject>();
+            if (!component.IsServer)
+            {
+                cupboard.GetPlacePosition(spawnIndex, out var parent, out var _, out var _);
+                var targetPosition = Vector3.zero + component.itemProperties.verticalOffset * new Vector3(0, 0, 1);
+                component.parentObject = null;
+                component.transform.SetParent(parent ?? StartOfRound.Instance.elevatorTransform, worldPositionStays: true);
+                component.startFallingPosition = component.transform.localPosition;
+                component.transform.localPosition = targetPosition;
+                component.targetFloorPosition = targetPosition;
+                component.reachedFloorTarget = false;
+                component.hasHitGround = false;
+            }
             component.isInElevator = true;
             component.isInShipRoom = true;
+            component.fallTime = 0f;
             if (component.itemProperties.isScrap)
                 component.SetScrapValue(value);
             if (component.itemProperties.saveItemVariable)
                 component.LoadItemSaveData(save);
-            component.fallTime = 0f;
         }
 
         public static void RescaleItemIfTooBig(GrabbableObject component)
