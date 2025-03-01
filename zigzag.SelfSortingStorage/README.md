@@ -35,7 +35,14 @@ The storage will then sort these tools and put them on display in specific secti
 
 ##
 
-### How to add custom trigger validation
+### Compatibility notes
+- It's recommended to have the mod [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) with the `FixItems[...]` configs types activated
+- Compatible with [2StoryShip](https://thunderstore.io/c/lethal-company/p/MelanieMelicious/MelanieMelicious_2_sToRy_ShIp__works_w_Wider_Ship_Mod/), but you may notice some issues if you have [WiderShip](https://thunderstore.io/c/lethal-company/p/mborsh/Wider_Ship_Mod/)
+- Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem but I'm not really sure
+
+##
+
+### How to add custom item condition
 **For items developers!** By default, every items are allowed in the storage but if you want to add a custom "condition" to your scraps and tools, so the Smart Cupboard will not accept them, you can do so easily by adding this mod as a soft dependency and then write this code :
 
 ```cs
@@ -71,7 +78,7 @@ If you want to suggest new features or contact me please go to the mod release p
 
 - Some parts ot the code is based on the [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) implementation by [WarperSan](https://thunderstore.io/c/lethal-company/p/WarperSan/), such as the items data structure.
     - ShipInventory is already a very well complete mod, so having my implementation follows the one by WarperSan not only ensure proper compatibility with modded items but also allows a similar behavior, which is perfect for already established users.
-    - The base code has been modified to better fit the SelfSortingStorage mod.
+    - The base item data code has been modified to better fit the SelfSortingStorage mod.
 
 - Cupboard asset is ripped from [Lethal Company](https://store.steampowered.com/app/1966720/Lethal_Company/).
 
