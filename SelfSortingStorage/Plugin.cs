@@ -13,6 +13,7 @@ using UnityEngine;
 namespace SelfSortingStorage
 {
     [BepInPlugin(GUID, NAME, VERSION)]
+    [BepInDependency("ShaosilGaming.GeneralImprovements", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         const string GUID = "zigzag.SelfSortingStorage";

@@ -37,8 +37,8 @@ The storage will then sort these tools and put them on display in specific secti
 ##
 
 ### Compatibility notes
-- It's recommended to have the mod [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) with the `FixItems[...]` configs types activated
-- Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem but I'm not really sure
+- [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) is a required dependency because I'm rotating items based on it's `FixItems` configs. This may change in the future to improve compatibility with other mods.
+- Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem. I need some people to help me figure out how these other mods affects items placement in the Smart Cupboard.
 
 ##
 
@@ -76,9 +76,7 @@ If you want to suggest new features or contact me please go to the mod release p
 
 - Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial idea and for testing!
 
-- Some parts ot the code is based on the [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) implementation by [WarperSan](https://thunderstore.io/c/lethal-company/p/WarperSan/), such as the items data structure.
-    - ShipInventory is already a very well complete mod, so having my implementation follows the one by WarperSan not only ensure proper compatibility with modded items but also allows a similar behavior, which is perfect for already established users.
-    - The base item data code has been modified to better fit the SelfSortingStorage mod.
+- Some parts ot the code is based on the [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) implementation by [WarperSan](https://thunderstore.io/c/lethal-company/p/WarperSan/), such as the items data structure which has been modified to better fit the SelfSortingStorage mod.
 
 - Cupboard asset is ripped from [Lethal Company](https://store.steampowered.com/app/1966720/Lethal_Company/).
 

@@ -4,6 +4,7 @@ namespace SelfSortingStorage
 {
     class Config
     {
+        public bool GeneralImprovements = false;
         public readonly ConfigEntry<bool> enableSaving;
         public readonly ConfigEntry<bool> allowScrapItems;
         public readonly ConfigEntry<string> cupboardColor;
@@ -28,6 +29,12 @@ namespace SelfSortingStorage
 
         public void SetupCustomConfigs()
         {
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ShaosilGaming.GeneralImprovements"))
+            {
+                GeneralImprovements = true;
+            }
+            if (!GeneralImprovements)
+                Plugin.logger.LogError("GeneralImprovements is not installed! The mod will still work but you may notice some item rotation issues.");
         }
     }
 }
