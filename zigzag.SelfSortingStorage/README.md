@@ -32,12 +32,12 @@ The storage will then sort these tools and put them on display in specific secti
 
 #### Planned features
 - New configs that will allow you to specify in which storage row some items are going to be stored.
+- Make a wider version of the Smart Cupboard and other cool things.
 
 ##
 
 ### Compatibility notes
 - It's recommended to have the mod [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) with the `FixItems[...]` configs types activated
-- Compatible with [2StoryShip](https://thunderstore.io/c/lethal-company/p/MelanieMelicious/MelanieMelicious_2_sToRy_ShIp__works_w_Wider_Ship_Mod/), but you may notice some issues if you have [WiderShip](https://thunderstore.io/c/lethal-company/p/mborsh/Wider_Ship_Mod/)
 - Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem but I'm not really sure
 
 ##
