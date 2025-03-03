@@ -171,13 +171,16 @@ namespace SelfSortingStorage.Utils
 
         public static void RescaleItemIfTooBig(GrabbableObject component, Vector3 size)
         {
-            var collider = component.GetComponent<BoxCollider>();
-            if (collider == null || size == null)
+            if (size == null)
                 return;
             var volume = (size.x * 2) * (size.y * 2) * (size.z * 2);
             if (volume > 0.08f)
             {
-                component.transform.localScale = (volume < 1f ? (0.07f * 100 / volume) : 20) * component.transform.localScale / 100;
+                var factor = volume < 0.5f ? (0.07f * 100 / volume) : 20;  // factor% of the original volume
+                component.transform.localScale = factor * component.transform.localScale / 100;
+                var targetScaledPosition = Vector3.zero + (factor * component.itemProperties.verticalOffset / 100) * new Vector3(0, 0, 1);
+                component.transform.localPosition = targetScaledPosition;
+                component.targetFloorPosition = targetScaledPosition;
                 if (Plugin.config.verboseLogging.Value)
                     Plugin.logger.LogInfo("Item was rescaled");
             }
@@ -191,6 +194,19 @@ namespace SelfSortingStorage.Utils
         public static void OverrideOriginalScale(GrabbableObject component, Vector3 value)
         {
             component.originalScale = value;
+        }
+
+        public static void ReParentItemToCupboard(GrabbableObject component, SmartCupboard cupboard, int spawnIndex, float scaleFactor = 0)
+        {
+            if (spawnIndex < 0)
+                return;
+            cupboard.GetPlacePosition(spawnIndex, out var parent, out var _, out var _);
+            var offset = scaleFactor != 0 ? (scaleFactor * component.itemProperties.verticalOffset / 100) : component.itemProperties.verticalOffset;
+            var targetPosition = Vector3.zero + offset * new Vector3(0, 0, 1);
+            component.parentObject = null;
+            component.transform.SetParent(parent ?? StartOfRound.Instance.elevatorTransform, worldPositionStays: true);
+            component.transform.localPosition = targetPosition;
+            component.targetFloorPosition = targetPosition;
         }
     }
 }
