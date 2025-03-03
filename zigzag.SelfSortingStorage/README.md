@@ -38,7 +38,7 @@ The storage will then sort these tools and put them on display in specific secti
 
 ### Compatibility notes
 - [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) is a required dependency because I'm rotating items based on it's `FixItems` configs. This may change in the future to improve compatibility with other mods.
-- Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem. I need some people to help me figure out how these other mods affects items placement in the Smart Cupboard.
+- Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem. Try disabling some of these mods items rotations configs if you have issues.
 
 ##
 
