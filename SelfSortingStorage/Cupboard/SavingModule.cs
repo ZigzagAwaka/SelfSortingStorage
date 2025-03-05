@@ -43,6 +43,10 @@ namespace SelfSortingStorage.Cupboard
                     SmartMemory.Instance.IgnoreSpaces.Add(spawnIndex);
                 spawnIndex++;
             }
+            if (Plugin.config.verboseLogging.Value)
+            {
+                Plugin.logger.LogWarning(SmartMemory.Instance.ToString());
+            }
             SmartMemory.Instance.IgnoreSpaces.Clear();
             cupboard.StartCoroutine(cupboard.ReloadPlacedItems());
             Plugin.logger.LogInfo("SmartCupboard items loaded.");

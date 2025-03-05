@@ -23,10 +23,29 @@ namespace SelfSortingStorage.Cupboard
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            PreparePlacePositions();
             if (IsServer)
                 memory.Initialize();
             else
                 StartCoroutine(SyncCupboard());
+        }
+
+        private void PreparePlacePositions()
+        {
+            if (Plugin.config.rowsOrder.Count == 4)
+            {
+                var posTmp = new Transform[placePositions.Length];
+                placePositions.CopyTo(posTmp, 0);
+                foreach (var (order, actual) in Plugin.config.rowsOrder)
+                {
+                    int id = actual * 4;
+                    int place = (order - 1) * 4;
+                    for (int i = place; i < place + 4; i++)
+                    {
+                        placePositions[i] = posTmp[id++];
+                    }
+                }
+            }
         }
 
         public void Update()
