@@ -31,7 +31,7 @@ The storage will then sort these tools and put them on display in specific secti
 - You can customize a lot of things in the config file (such as the price and the color of the cupboard).
 - Some optional upgrades can be activated in the configs.
 
-<details><summary>Preview images of some upgrades (click to reveal)</summary>
+<details><summary>Preview images of the upgrades (click to reveal)</summary>
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades1.PNG)
 
