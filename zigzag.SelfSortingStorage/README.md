@@ -29,10 +29,13 @@ The storage will then sort these tools and put them on display in specific secti
 - All items stored in the Smart Cupboard are saved in the host player's current save file.
 - If you dump a big item in the box, it will be rescaled to fit nicely in the storage!
 - You can customize a lot of things in the config file (such as the price and the color of the cupboard).
+- Some optional upgrades can be activated in the configs.
 
-#### Planned features
-- New configs that will allow you to specify in which storage row some items are going to be stored.
-- Make a wider version of the Smart Cupboard and other cool things.
+<details><summary>Preview images of some upgrades (click to reveal)</summary>
+
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades1.PNG)
+
+</details>
 
 ##
 
