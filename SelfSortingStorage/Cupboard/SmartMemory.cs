@@ -93,6 +93,8 @@ namespace SelfSortingStorage.Cupboard
 
         public SmartMemory()
         {
+            if (Plugin.instance.ROWS_LENGTH == 7)
+                Capacity = 28;
             ClearAll(false);
         }
 
@@ -111,8 +113,8 @@ namespace SelfSortingStorage.Cupboard
             }
             for (int i = 0; i < 4; i++)
             {
-                var list = new List<Data>(4);
-                for (int j = 0; j < 4; j++)
+                var list = new List<Data>(Plugin.instance.ROWS_LENGTH);
+                for (int j = 0; j < Plugin.instance.ROWS_LENGTH; j++)
                     list.Add(new Data());
                 ItemList.Add(list);
             }
@@ -169,8 +171,8 @@ namespace SelfSortingStorage.Cupboard
                 if (Plugin.config.verboseLogging.Value)
                     Plugin.logger.LogWarning("Found 1 free space");
                 spawnIndex = lastFreeSpaceId;
-                int place = (int)(lastFreeSpaceId / 4.0f);
-                int diff = lastFreeSpaceId - (place * 4);
+                int place = (int)(lastFreeSpaceId / (float)Plugin.instance.ROWS_LENGTH);
+                int diff = lastFreeSpaceId - (place * Plugin.instance.ROWS_LENGTH);
                 ItemList[place][diff].Update(data);
                 Size++;
                 return true;
@@ -186,9 +188,9 @@ namespace SelfSortingStorage.Cupboard
                 Plugin.logger.LogWarning(ToString());
                 Plugin.logger.LogWarning("Retrieving item at position: " + spawnIndex);
             }
-            int place = (int)(spawnIndex / 4.0f);
-            int diff = spawnIndex - (place * 4);
-            if (place >= 4 || diff >= 4)
+            int place = (int)(spawnIndex / (float)Plugin.instance.ROWS_LENGTH);
+            int diff = spawnIndex - (place * Plugin.instance.ROWS_LENGTH);
+            if (place >= 4 || diff >= Plugin.instance.ROWS_LENGTH)
                 return null;
             var result = ItemList[place][diff];
             if (!result.IsValid())

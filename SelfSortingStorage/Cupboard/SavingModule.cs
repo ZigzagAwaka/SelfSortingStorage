@@ -57,11 +57,10 @@ namespace SelfSortingStorage.Cupboard
             items = null;
             if (SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return false;
-            var length = SmartMemory.Instance.ItemList.Count;
             var itemsList = new List<SmartMemory.Data>();
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < length; j++)
+                for (int j = 0; j < Plugin.instance.ROWS_LENGTH; j++)
                 {
                     var item = SmartMemory.Instance.ItemList[i][j];
                     itemsList.Add(item);

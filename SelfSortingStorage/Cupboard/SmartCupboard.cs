@@ -38,9 +38,9 @@ namespace SelfSortingStorage.Cupboard
                 placePositions.CopyTo(posTmp, 0);
                 foreach (var (order, actual) in Plugin.config.rowsOrder)
                 {
-                    int id = actual * 4;
-                    int place = (order - 1) * 4;
-                    for (int i = place; i < place + 4; i++)
+                    int id = actual * Plugin.instance.ROWS_LENGTH;
+                    int place = (order - 1) * Plugin.instance.ROWS_LENGTH;
+                    for (int i = place; i < place + Plugin.instance.ROWS_LENGTH; i++)
                     {
                         placePositions[i] = posTmp[id++];
                     }

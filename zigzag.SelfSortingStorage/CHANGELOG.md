@@ -1,3 +1,6 @@
+## 1.0.3
+- Added the S4 Upgrade `Wide Cupboard` that can be activated in the config
+
 ## 1.0.2
 - Added a new config `Rows order` that allows to customize the order of items placement in the storage
 

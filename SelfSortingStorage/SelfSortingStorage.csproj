@@ -37,6 +37,9 @@
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
       <HintPath>..\..\_utils\Librairies\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\_utils\Librairies\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\_utils\Librairies\UnityEngine.dll</HintPath>
     </Reference>

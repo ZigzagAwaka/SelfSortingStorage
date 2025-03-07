@@ -15,6 +15,7 @@ namespace SelfSortingStorage
         public readonly ConfigEntry<bool> rescaleItems;
         public readonly ConfigEntry<string> rowsOrderStr;
         public readonly ConfigEntry<int> cupboardPrice;
+        public readonly ConfigEntry<bool> wideVersion;
         public readonly ConfigEntry<bool> verboseLogging;
 
         public Config(ConfigFile cfg)
@@ -27,6 +28,7 @@ namespace SelfSortingStorage
             rescaleItems = cfg.Bind("Storage", "Rescale big items", true, "Big items will be rescaled when stored in the Smart Cupboard.");
             rowsOrderStr = cfg.Bind("Storage", "Rows order", "1,2,3,4", "Specify the order of items placement in the storage. Each number represents a shelve of the storage from top to bottom and the first one to be filled will be the number '1'.\nExample: Having an order of '1,2,3,4' will fill items from top to bottom, and having '3,1,2,4' will fill the middle shelves first.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening.");
             cupboardPrice = cfg.Bind("Shop", "Price", 20, "The price of the Smart Cupboard in the store.");
+            wideVersion = cfg.Bind("Upgrades", "Wide Cupboard", false, "Activate the S4 upgrade, turns the Smart Cupboard into a wider version.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening.");
             verboseLogging = cfg.Bind("Logs", "Verbose logs", false, "Enable more explicit logs in the console (for debug reasons).");
             cfg.Save();
             cfg.SaveOnConfigSet = true;

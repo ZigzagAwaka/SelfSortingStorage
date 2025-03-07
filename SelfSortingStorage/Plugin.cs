@@ -18,13 +18,14 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.0.2";
+        const string VERSION = "1.0.3";
 
         public static Plugin instance;
         public static ManualLogSource logger;
         private readonly Harmony harmony = new Harmony(GUID);
         internal static Config config { get; private set; } = null!;
         internal const string VANILLA_NAME = "LethalCompanyGame";
+        internal int ROWS_LENGTH { get; private set; } = 4;
         internal readonly static List<(System.Func<PlayerControllerB, bool>, string)> spTriggerValidations = new List<(System.Func<PlayerControllerB, bool>, string)>();
 
         void HarmonyPatchAll()
@@ -47,6 +48,13 @@ namespace SelfSortingStorage
             config = new Config(Config);
             config.SetupCustomConfigs();
             Effects.SetupNetwork();
+
+            if (config.wideVersion.Value)
+            {
+                var widePrefab = bundle.LoadAsset<GameObject>(directory + "SSS_Module/SSS_Module_WideVariant.prefab");
+                sssUnlockable.unlockable.prefabObject = widePrefab;
+                ROWS_LENGTH = 7;
+            }
 
             var sssPrefab = sssUnlockable.unlockable.prefabObject;
             ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor);

@@ -114,4 +114,35 @@ namespace SelfSortingStorage.Utils
             return true;
         }
     }
+
+    [HarmonyPatch(typeof(ShipBuildModeManager))]
+    internal class ShipBuildModeManagerPatch
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("CreateGhostObjectAndHighlight")]
+        public static bool CreateGhostObjectAndHighlightPatch(ShipBuildModeManager __instance)
+        {
+            if (__instance.placingObject == null || __instance.placingObject.parentObject.name != "SSS_Module_WideVariant(Clone)")
+                return true;
+            ((Behaviour)(object)HUDManager.Instance.buildModeControlTip).enabled = true;
+            if (StartOfRound.Instance.localPlayerUsingController)
+                HUDManager.Instance.buildModeControlTip.text = "Confirm: [Y]   |   Rotate: [L-shoulder]   |   Store: [B]";
+            else
+                HUDManager.Instance.buildModeControlTip.text = "Confirm: [B]   |   Rotate: [R]   |   Store: [X]";
+            HUDManager.Instance.UIAudio.PlayOneShot(__instance.beginPlacementSFX);
+            __instance.ghostObject.transform.eulerAngles = __instance.placingObject.mainMesh.transform.eulerAngles;
+            __instance.ghostObjectMesh.mesh = __instance.placingObject.mainMesh.mesh;
+            __instance.ghostObjectMesh.transform.localScale = __instance.placingObject.mainMesh.transform.localScale;
+            __instance.ghostObjectMesh.transform.position = __instance.ghostObject.position + (__instance.placingObject.mainMesh.transform.position - __instance.placingObject.placeObjectCollider.transform.position);
+            __instance.ghostObjectMesh.transform.localEulerAngles = Vector3.zero;
+            __instance.ghostObjectRenderer.enabled = true;
+            __instance.selectionOutlineMesh.mesh = __instance.placingObject.mainMesh.mesh;
+            __instance.selectionOutlineMesh.transform.localScale = __instance.placingObject.mainMesh.transform.localScale;
+            __instance.selectionOutlineMesh.transform.localScale = __instance.selectionOutlineMesh.transform.localScale * 1.04f;
+            __instance.selectionOutlineMesh.transform.position = __instance.placingObject.mainMesh.transform.position;
+            __instance.selectionOutlineMesh.transform.eulerAngles = __instance.placingObject.mainMesh.transform.eulerAngles;
+            __instance.selectionOutlineRenderer.enabled = true;
+            return false;
+        }
+    }
 }
