@@ -40,8 +40,14 @@ The storage will then sort these tools and put them on display in specific secti
 ##
 
 ### Compatibility notes
-- [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) is a required dependency because I'm rotating items based on it's `FixItems` configs. This may change in the future to improve compatibility with other mods.
-- Mods that change item resting position and rotation such as [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) could be a problem. Try disabling some of these mods items rotations configs if you have issues.
+- **GeneralImprovements**
+    - [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) is a required dependency because I'm rotating items based on the `FixItemsLoadingSameRotation` + `FixItemsFallingThrough` configs. This is needed for items to face the correct direction when stored.
+    - `ShipPlaceablesCollide` config in GeneralImprovements NEEDS to be activated (at least from my personnal observations).
+- **Matty_Fixes**
+    - If you have [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed, you need to disable either `FixItemsFallingThrough` in GeneralImprovements OR disable `OutOfBounds.Enabled` in Matty_Fixes, because these mods do the same thing.
+    - For people that don't want or need GeneralImprovements, it is considered as a soft dependency in the code so you can remove it safely. But if you remove it then you'll need to install Matty_Fixes instead.
+- **CruiserImproved and custom ships**
+    - If you have a custom ship mod AND [CruiserImproved](https://thunderstore.io/c/lethal-company/p/DiggC/CruiserImproved/) installed, reloading a save when the SSS is already unlocked will break it until a complete reset. Please wait for this mod to be updated to support custom ships.
 
 ##
 
@@ -78,6 +84,8 @@ If you want to suggest new features or contact me please go to the mod release p
 - Thanks [Xu Xiaolan](https://www.youtube.com/shorts/Kt5mnWK-rgI) for helping with some parts of the code, and also for suggesting good things!
 
 - Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial idea and for testing!
+
+- Thanks [ScienceBird](https://thunderstore.io/c/lethal-company/p/ScienceBird/) for the help on the 1.0.4 update!
 
 - Some parts ot the code is based on the [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) implementation by [WarperSan](https://thunderstore.io/c/lethal-company/p/WarperSan/), such as the items data structure which has been modified to better fit the SelfSortingStorage mod.
 

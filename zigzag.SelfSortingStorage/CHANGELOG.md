@@ -1,5 +1,8 @@
 ## 1.0.4
-- f
+- Smart Cupboard is now parented to the ship when spawned, this change allows the following:
+    - Fixed items retrieved from the storage while the ship is moving to "jitter" in player hands
+    - Stored items will now be recognized by mods like [ShipLoot](https://thunderstore.io/c/lethal-company/p/tinyhoot/ShipLoot/)
+- Updated compatibility notes in the README
 
 ## 1.0.3
 - Added the S4 Upgrade `Wide Cupboard` that can be activated in the config

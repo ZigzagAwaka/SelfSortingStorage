@@ -4,7 +4,7 @@
     "website_url": "https://github.com/ZigzagAwaka/SelfSortingStorage",
     "description": "Adds a special storage container to the shop that automatically sorts equipment items (scraps are also supported).",
     "dependencies": [
-        "ShaosilGaming-GeneralImprovements-1.4.8",
+        "ShaosilGaming-GeneralImprovements-1.4.9",
         "Evaisa-LethalLib-0.16.1",
         "BepInEx-BepInExPack-5.4.2100"
     ]
