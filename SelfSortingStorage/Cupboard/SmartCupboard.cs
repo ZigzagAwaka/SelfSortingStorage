@@ -23,6 +23,11 @@ namespace SelfSortingStorage.Cupboard
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            var hangerShip = GameObject.Find("/Environment/HangarShip");
+            if (hangerShip != null)
+            {
+                parentObject.transform.SetParent(hangerShip.transform, worldPositionStays: true);
+            }
             PreparePlacePositions();
             if (IsServer)
                 memory.Initialize();

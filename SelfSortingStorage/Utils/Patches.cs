@@ -115,6 +115,7 @@ namespace SelfSortingStorage.Utils
         }
     }
 
+
     [HarmonyPatch(typeof(ShipBuildModeManager))]
     internal class ShipBuildModeManagerPatch
     {

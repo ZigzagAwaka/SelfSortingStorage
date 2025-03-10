@@ -1,3 +1,6 @@
+## 1.0.4
+- f
+
 ## 1.0.3
 - Added the S4 Upgrade `Wide Cupboard` that can be activated in the config
 
