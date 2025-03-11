@@ -1,3 +1,6 @@
+## 1.0.5
+- f
+
 ## 1.0.4
 - Smart Cupboard is now parented to the ship when spawned, this change allows the following:
     - Fixed items retrieved from the storage while the ship is moving to "jitter" in player hands

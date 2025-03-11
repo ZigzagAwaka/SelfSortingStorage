@@ -18,7 +18,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.0.4";
+        const string VERSION = "1.0.5";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -31,6 +31,17 @@ namespace SelfSortingStorage
         void HarmonyPatchAll()
         {
             harmony.PatchAll();
+        }
+
+        private void ReplaceTransform(GameObject prefab, string originName, string destinationName)
+        {
+            var originTransform = prefab.transform.Find(originName);
+            var destinationTransform = prefab.transform.Find(destinationName);
+            if (originTransform != null && destinationTransform != null)
+            {
+                originTransform.position = destinationTransform.position;
+                originTransform.rotation = destinationTransform.rotation;
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051")]
@@ -59,14 +70,17 @@ namespace SelfSortingStorage
             var sssPrefab = sssUnlockable.unlockable.prefabObject;
             ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor);
             sssPrefab.GetComponent<MeshRenderer>().materials[0].color = customColor;
+            if (!config.resetButton.Value)
+            {
+                var resetButton = sssPrefab.transform.Find("DeathButtonPosition");
+                resetButton?.gameObject.SetActive(false);
+            }
             if (config.boxPosition.Value == "R")
             {
-                var boxTransform = sssPrefab.transform.Find("ChutePosition/ActualPos");
-                var pos2Transform = sssPrefab.transform.Find("ChutePosition/Pos2");
-                if (boxTransform != null && pos2Transform != null)
+                ReplaceTransform(sssPrefab, "ChutePosition/ActualPos", "ChutePosition/Pos2");
+                if (config.resetButton.Value)
                 {
-                    boxTransform.position = pos2Transform.position;
-                    boxTransform.rotation = pos2Transform.rotation;
+                    ReplaceTransform(sssPrefab, "DeathButtonPosition/ActualPos", "DeathButtonPosition/Pos2");
                 }
             }
 

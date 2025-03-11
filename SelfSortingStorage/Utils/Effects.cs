@@ -56,6 +56,21 @@ namespace SelfSortingStorage.Utils
             HUDManager.Instance.DisplayTip(title, bottom, warning);
         }
 
+        public static IEnumerator FadeOutAudio(AudioSource source, float time, bool specialStop = false)
+        {
+            yield return new WaitForEndOfFrame();
+            var volume = source.volume;
+            while (source.volume > 0)
+            {
+                source.volume -= volume * Time.deltaTime / time;
+                if (specialStop && source.volume <= 0.01f)
+                    break;
+                yield return null;
+            }
+            source.Stop();
+            source.volume = volume;
+        }
+
         public static bool IsTriggerValid(PlayerControllerB player, out string notValidText)
         {
             notValidText = "[Nothing to store]";
