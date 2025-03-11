@@ -23,6 +23,8 @@ namespace SelfSortingStorage.Buttons
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            if (!Plugin.config.resetButton.Value)
+                return;
             if (!IsServer)
                 StartCoroutine(SyncButton());
         }

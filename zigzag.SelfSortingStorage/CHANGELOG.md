@@ -1,5 +1,6 @@
 ## 1.0.5
-- f
+- Added the `Reset Button` and `Cozy Lights` upgrades that can be activated in the config
+- Added a scan node to the storage box, can be removed in the config
 
 ## 1.0.4
 - Smart Cupboard is now parented to the ship when spawned, this change allows the following:

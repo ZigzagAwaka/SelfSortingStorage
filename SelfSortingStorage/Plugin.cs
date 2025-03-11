@@ -70,10 +70,20 @@ namespace SelfSortingStorage
             var sssPrefab = sssUnlockable.unlockable.prefabObject;
             ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor);
             sssPrefab.GetComponent<MeshRenderer>().materials[0].color = customColor;
+            if (!config.scanNode.Value)
+            {
+                var scanNode = sssPrefab.transform.Find("ChutePosition/ActualPos/ScanNode");
+                scanNode?.gameObject.SetActive(false);
+            }
             if (!config.resetButton.Value)
             {
                 var resetButton = sssPrefab.transform.Find("DeathButtonPosition");
                 resetButton?.gameObject.SetActive(false);
+            }
+            if (!config.cozyLights.Value)
+            {
+                var lights = sssPrefab.transform.Find("Lights");
+                lights?.gameObject.SetActive(false);
             }
             if (config.boxPosition.Value == "R")
             {
@@ -81,6 +91,10 @@ namespace SelfSortingStorage
                 if (config.resetButton.Value)
                 {
                     ReplaceTransform(sssPrefab, "DeathButtonPosition/ActualPos", "DeathButtonPosition/Pos2");
+                }
+                if (config.cozyLights.Value)
+                {
+                    ReplaceTransform(sssPrefab, "Lights/LightsButtonPosition/ActualPos", "Lights/LightsButtonPosition/Pos2");
                 }
             }
 
