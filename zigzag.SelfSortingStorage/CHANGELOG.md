@@ -1,3 +1,8 @@
+## 1.0.6
+- Fixed some items having a desynced position and rotation for late join players
+- Fixed a network error for client players when the SSS is spawned
+- Tweaked the scaling algorithm to perfectly rescale items based on their collider max size. The old scaling algorithm can still be activated in the config
+
 ## 1.0.5
 - Added the `Reset Button` and `Cozy Lights` upgrades that can be activated in the config
 - Added a scan node to the storage box, can be removed in the config

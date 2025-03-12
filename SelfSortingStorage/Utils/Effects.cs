@@ -63,7 +63,7 @@ namespace SelfSortingStorage.Utils
             while (source.volume > 0)
             {
                 source.volume -= volume * Time.deltaTime / time;
-                if (specialStop && source.volume <= 0.01f)
+                if (specialStop && source.volume <= 0.04f)
                     break;
                 yield return null;
             }
@@ -157,15 +157,15 @@ namespace SelfSortingStorage.Utils
             GrabbableObject component = itemNetObject.GetComponent<GrabbableObject>();
             if (!component.IsServer)
             {
-                cupboard.GetPlacePosition(spawnIndex, out var parent, out var _, out var _);
+                cupboard.GetPlacePosition(spawnIndex, out var parent, out _, out _);
                 var targetPosition = Vector3.zero + component.itemProperties.verticalOffset * new Vector3(0, 0, 1);
                 component.parentObject = null;
                 component.transform.SetParent(parent ?? StartOfRound.Instance.elevatorTransform, worldPositionStays: true);
                 component.startFallingPosition = component.transform.localPosition;
                 component.transform.localPosition = targetPosition;
                 component.targetFloorPosition = targetPosition;
-                component.reachedFloorTarget = false;
-                component.hasHitGround = false;
+                component.reachedFloorTarget = true;
+                component.hasHitGround = true;
             }
             component.isInElevator = true;
             component.isInShipRoom = true;
@@ -174,6 +174,30 @@ namespace SelfSortingStorage.Utils
                 component.SetScrapValue(value);
             if (component.itemProperties.saveItemVariable)
                 component.LoadItemSaveData(save);
+        }
+
+        private static bool ShouldRescale(Vector3 size, out float factor)
+        {
+            factor = 100f;
+            if (Plugin.config.perfectRescale.Value)
+            {
+                var max = size.x > size.y && size.x > size.z ? size.x : (size.y > size.x && size.y > size.z ? size.y : size.z);
+                if (max > 0.25f)
+                {
+                    factor = 0.21f * 100 / max;  // factor% of the original max size
+                    return true;
+                }
+            }
+            else
+            {
+                var volume = (size.x * 2) * (size.y * 2) * (size.z * 2);
+                if (volume > 0.08f)
+                {
+                    factor = volume < 0.5f ? (0.07f * 100 / volume) : 20;  // factor% of the original volume
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static void RescaleItemIfTooBig(GrabbableObject component)
@@ -188,10 +212,8 @@ namespace SelfSortingStorage.Utils
         {
             if (size == null)
                 return;
-            var volume = (size.x * 2) * (size.y * 2) * (size.z * 2);
-            if (volume > 0.08f)
+            if (ShouldRescale(size, out var factor))
             {
-                var factor = volume < 0.5f ? (0.07f * 100 / volume) : 20;  // factor% of the original volume
                 component.transform.localScale = factor * component.transform.localScale / 100;
                 var targetScaledPosition = Vector3.zero + (factor * component.itemProperties.verticalOffset / 100) * new Vector3(0, 0, 1);
                 component.transform.localPosition = targetScaledPosition;
@@ -211,17 +233,22 @@ namespace SelfSortingStorage.Utils
             component.originalScale = value;
         }
 
-        public static void ReParentItemToCupboard(GrabbableObject component, SmartCupboard cupboard, int spawnIndex, float scaleFactor = 0)
+        public static void ReParentItemToCupboard(GrabbableObject component, SmartCupboard cupboard, int spawnIndex, bool overridePosRot = false, Vector3 syncedPos = default, Quaternion syncedRot = default)
         {
             if (spawnIndex < 0)
                 return;
-            cupboard.GetPlacePosition(spawnIndex, out var parent, out var _, out var _);
-            var offset = scaleFactor != 0 ? (scaleFactor * component.itemProperties.verticalOffset / 100) : component.itemProperties.verticalOffset;
-            var targetPosition = Vector3.zero + offset * new Vector3(0, 0, 1);
+            cupboard.GetPlacePosition(spawnIndex, out var parent, out _, out _);
+            Vector3 targetPosition = overridePosRot ? syncedPos : Vector3.zero + component.itemProperties.verticalOffset * new Vector3(0, 0, 1);
             component.parentObject = null;
             component.transform.SetParent(parent ?? StartOfRound.Instance.elevatorTransform, worldPositionStays: true);
             component.transform.localPosition = targetPosition;
             component.targetFloorPosition = targetPosition;
+            if (overridePosRot)
+            {
+                component.transform.localRotation = syncedRot;
+            }
+            component.reachedFloorTarget = true;
+            component.hasHitGround = true;
         }
     }
 }

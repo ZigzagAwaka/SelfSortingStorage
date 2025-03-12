@@ -24,7 +24,7 @@ namespace SelfSortingStorage.Cupboard
         {
             base.OnNetworkSpawn();
             var hangerShip = GameObject.Find("/Environment/HangarShip");
-            if (hangerShip != null)
+            if (hangerShip != null && IsServer)
             {
                 parentObject.transform.SetParent(hangerShip.transform, worldPositionStays: true);
             }
@@ -236,7 +236,7 @@ namespace SelfSortingStorage.Cupboard
                 StartCoroutine(ScaleItem(itemRef, scaleMode, size));
         }
 
-        private IEnumerator ScaleItem(NetworkObjectReference itemRef, bool scaleMode, Vector3 size, bool overrideOriginalScale = false, int spawnIndex = -1, float scaleFactor = 0)
+        private IEnumerator ScaleItem(NetworkObjectReference itemRef, bool scaleMode, Vector3 size, bool syncedFromHost = false, int spawnIndex = -1, Vector3 syncedPos = default, Quaternion syncedRot = default)
         {
             if (scaleMode)
             {
@@ -246,13 +246,13 @@ namespace SelfSortingStorage.Cupboard
                 var component = itemNetObject.GetComponent<GrabbableObject>();
                 while (component.originalScale == Vector3.zero)  // wait for item to start (set originalScale)
                     yield return new WaitForSeconds(0.03f);
-                if (!overrideOriginalScale)
+                if (!syncedFromHost)
                     Effects.RescaleItemIfTooBig(component, size);
                 else
                 {
                     if (Plugin.config.rescaleItems.Value)
                         Effects.OverrideOriginalScale(component, size);
-                    Effects.ReParentItemToCupboard(component, this, spawnIndex, scaleFactor);
+                    Effects.ReParentItemToCupboard(component, this, spawnIndex, true, syncedPos, syncedRot);
                 }
             }
             else
@@ -337,21 +337,17 @@ namespace SelfSortingStorage.Cupboard
             {
                 if (!item.isHeld && !item.isHeldByEnemy)
                 {
-                    float scaleFactor = 0;
-                    if (Plugin.config.rescaleItems.Value && item.originalScale != item.transform.localScale)  // try to get the factor again, will not be 100% acurate
-                    {
-                        scaleFactor = (item.transform.localScale.x * item.originalScale.x + item.transform.localScale.y * item.originalScale.y + item.transform.localScale.z * item.originalScale.z)
-                            / (item.originalScale.x * item.originalScale.x + item.originalScale.y * item.originalScale.y + item.originalScale.z * item.originalScale.z);
-                    }
-                    SyncClientRpc(item.gameObject.GetComponent<NetworkObject>(), spawnIndex, item.originalScale, scaleFactor, clientRpcParams);
+                    Vector3 syncedPosition = item.targetFloorPosition;
+                    Quaternion syncedRotation = item.transform.localRotation;
+                    SyncClientRpc(item.gameObject.GetComponent<NetworkObject>(), spawnIndex, item.originalScale, syncedPosition, syncedRotation, clientRpcParams);
                 }
             }
         }
 
         [ClientRpc]
-        private void SyncClientRpc(NetworkObjectReference itemRef, int spawnIndex, Vector3 originalScale, float scaleFactor, ClientRpcParams clientRpcParams = default)
+        private void SyncClientRpc(NetworkObjectReference itemRef, int spawnIndex, Vector3 originalScale, Vector3 syncedPos, Quaternion syncedRot, ClientRpcParams clientRpcParams = default)
         {
-            StartCoroutine(ScaleItem(itemRef, true, originalScale, true, spawnIndex, scaleFactor));
+            StartCoroutine(ScaleItem(itemRef, true, originalScale, true, spawnIndex, syncedPos, syncedRot));
         }
 
         [ClientRpc]
