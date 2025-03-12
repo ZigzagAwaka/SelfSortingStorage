@@ -19,6 +19,9 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\_utils\Librairies\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="GeneralImprovements">
+      <HintPath>..\..\_utils\Librairies\GeneralImprovements.dll</HintPath>
+    </Reference>
     <Reference Include="LethalLib">
       <HintPath>..\..\_utils\Librairies\LethalLib.dll</HintPath>
     </Reference>

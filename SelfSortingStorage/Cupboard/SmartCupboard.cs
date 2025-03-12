@@ -23,15 +23,17 @@ namespace SelfSortingStorage.Cupboard
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            var hangerShip = GameObject.Find("/Environment/HangarShip");
-            if (hangerShip != null && IsServer)
+            if (IsServer)
             {
-                parentObject.transform.SetParent(hangerShip.transform, worldPositionStays: true);
+                memory.Initialize();
+                /*if (Plugin.config.GeneralImprovements && Plugin.config.customScreenPos.Value > 0)
+                    StartCoroutine(DisplayOnScreen(Plugin.config.customScreenPos.Value - 1));*/
+                var hangarShip = GameObject.Find("/Environment/HangarShip");
+                if (hangarShip != null)
+                    parentObject.transform.SetParent(hangarShip.transform, worldPositionStays: true);
             }
             PreparePlacePositions();
-            if (IsServer)
-                memory.Initialize();
-            else
+            if (!IsServer)
                 StartCoroutine(SyncCupboard());
         }
 
@@ -355,5 +357,28 @@ namespace SelfSortingStorage.Cupboard
         {
             memory.Size = size;
         }
+
+        /*private IEnumerator DisplayOnScreen(int screenID)
+        {
+            Debug.LogError("d" + screenID);
+            int i = 0;
+            while (SmartMemory.Instance != null)
+            {
+                Effects.SetScreenText(screenID, "hello " + i);
+                yield return new WaitForSeconds(10);
+                i++;
+                Debug.LogError(i);
+                foreach (var list in memory.ItemList)
+                {
+                    foreach (var item in list)
+                    {
+                        if (item.IsValid())
+                        {
+
+                        }
+                    }
+                }
+            }
+        }*/
     }
 }
