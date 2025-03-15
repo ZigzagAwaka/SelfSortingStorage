@@ -1,5 +1,5 @@
 ## 1.0.7
-- Added the `SSS Screen position` upgrade that can be activated in the config
+- Added the `SSS Screen position` upgrade that can be activated in the config (requires [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) config: `UseBetterMonitors = true`)
 
 ## 1.0.6
 - Fixed some items having a desynced position and rotation for late join players
