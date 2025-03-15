@@ -34,6 +34,14 @@ namespace SelfSortingStorage.Utils
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch("Start")]
+        public static void SetSmartCupboardDefaultScreen()
+        {
+            if (!SmartCupboard.SpawnedInShip && Plugin.config.GeneralImprovements && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+                Effects.SetScreenText(Plugin.config.customScreenPos.Value - 1, $"<color=#ffff00>{"Smart Cupboard:\n$" + Plugin.config.cupboardPrice.Value}</color>");
+        }
+
+        [HarmonyPostfix]
         [HarmonyPatch("ResetShip")]
         public static void ResetSmartCupboard()
         {

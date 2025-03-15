@@ -17,6 +17,7 @@ namespace SelfSortingStorage.Cupboard
         private readonly List<int> indexToRemove = new List<int>();
         private GrabbableObject? awaitingObject = null;
         private bool responseOnAwaiting = false;
+        public static bool SpawnedInShip { get; private set; } = false;
 
         public SmartCupboard() { }
 
@@ -26,15 +27,22 @@ namespace SelfSortingStorage.Cupboard
             if (IsServer)
             {
                 memory.Initialize();
-                /*if (Plugin.config.GeneralImprovements && Plugin.config.customScreenPos.Value > 0)
-                    StartCoroutine(DisplayOnScreen(Plugin.config.customScreenPos.Value - 1));*/
+                if (Plugin.config.GeneralImprovements && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+                    StartCoroutine(DisplayOnScreen());
                 var hangarShip = GameObject.Find("/Environment/HangarShip");
                 if (hangarShip != null)
                     parentObject.transform.SetParent(hangarShip.transform, worldPositionStays: true);
             }
+            SpawnedInShip = true;
             PreparePlacePositions();
             if (!IsServer)
                 StartCoroutine(SyncCupboard());
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            SpawnedInShip = false;
         }
 
         private void PreparePlacePositions()
@@ -358,27 +366,63 @@ namespace SelfSortingStorage.Cupboard
             memory.Size = size;
         }
 
-        /*private IEnumerator DisplayOnScreen(int screenID)
+        private IEnumerator DisplayOnScreen()
         {
-            Debug.LogError("d" + screenID);
-            int i = 0;
+            int lastId = 0;
             while (SmartMemory.Instance != null)
             {
-                Effects.SetScreenText(screenID, "hello " + i);
-                yield return new WaitForSeconds(10);
-                i++;
-                Debug.LogError(i);
-                foreach (var list in memory.ItemList)
+                if (memory.Size != 0)
                 {
-                    foreach (var item in list)
+                    var it = 0;
+                    var builder = new System.Text.StringBuilder();
+                    for (int i = lastId; i < memory.Capacity; i++)
                     {
-                        if (item.IsValid())
+                        var item = memory.RetrieveData(i, false);
+                        if (item != null)
                         {
-
+                            builder.Append(GetItemScreenText(item));
+                            it++;
+                        }
+                        var verifReset = it == memory.Size || i + 1 >= memory.Capacity;
+                        if (it == 4 || verifReset)
+                        {
+                            lastId = verifReset ? 0 : i + 1;
+                            break;
                         }
                     }
+                    if (it == 0)
+                        continue;
+                    SetScreenTextServerRpc(builder.ToString());
+                    yield return new WaitForSeconds(10);
+                }
+                else
+                {
+                    SetScreenTextServerRpc("No items in Smart Cupboard");
+                    yield return new WaitUntil(() => memory.Size != 0);
                 }
             }
-        }*/
+        }
+
+        private string GetItemScreenText(SmartMemory.Data item)
+        {
+            var name = item.Id.Split('/')[1];
+            var quantity = item.Quantity >= 100 ? 99 : item.Quantity;
+            var offset = quantity < 10 ? 6 : 5;
+            var cutName = name.Length >= offset + 1 ? name.Remove(offset) : name;
+            return cutName + " x" + quantity + "\n";
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetScreenTextServerRpc(string text)
+        {
+            SetScreenTextClientRpc(text);
+        }
+
+        [ClientRpc]
+        private void SetScreenTextClientRpc(string text)
+        {
+            if (Plugin.config.GeneralImprovements && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+                Effects.SetScreenText(Plugin.config.customScreenPos.Value - 1, text);
+        }
     }
 }

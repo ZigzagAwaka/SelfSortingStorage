@@ -183,7 +183,7 @@ namespace SelfSortingStorage.Cupboard
 
         public Data? RetrieveData(int spawnIndex, bool updateQuantity = true)
         {
-            if (Plugin.config.verboseLogging.Value)
+            if (Plugin.config.verboseLogging.Value && updateQuantity)
             {
                 Plugin.logger.LogWarning(ToString());
                 Plugin.logger.LogWarning("Retrieving item at position: " + spawnIndex);
@@ -206,7 +206,7 @@ namespace SelfSortingStorage.Cupboard
                     ItemList[place][diff] = new Data();
                 }
             }
-            if (Plugin.config.verboseLogging.Value)
+            if (Plugin.config.verboseLogging.Value && updateQuantity)
                 Plugin.logger.LogWarning(ToString());
             return result;
         }

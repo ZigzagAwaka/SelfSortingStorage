@@ -1,3 +1,6 @@
+## 1.0.7
+- Added the `SSS Screen position` upgrade that can be activated in the config
+
 ## 1.0.6
 - Fixed some items having a desynced position and rotation for late join players
 - Fixed a network error for client players when the SSS is spawned
