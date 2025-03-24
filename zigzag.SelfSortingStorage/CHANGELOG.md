@@ -1,3 +1,11 @@
+## 1.0.8
+- Modified the cabinet model so that all shelves are now the same size
+- Made buttons easier to press
+- Fixed the SSS GI Screen being turned off for late join players when there is no item stored
+- Updated images and compatibility notes in the README
+
+*[Updating from an older version to 1.0.8+ may cause some item placement issues on already existing saves. To avoid this, you'll need to reset your save, but if you don't want to do that you can instead retrieve every stored items, or press the reset button BEFORE updating.]*
+
 ## 1.0.7
 - Added the `SSS Screen position` upgrade that can be activated in the config (requires [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) config: `UseBetterMonitors = true`)
 

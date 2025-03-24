@@ -340,6 +340,8 @@ namespace SelfSortingStorage.Cupboard
         {
             if (memory.IsFull())
                 SetSizeClientRpc(memory.Size);
+            if (memory.Size == 0)
+                SetScreenTextServerRpc("No items in Smart Cupboard");
             if (placedItems.Count == 0)
                 return;
             var clientRpcParams = new ClientRpcParams() { Send = new ClientRpcSendParams() { TargetClientIds = new[] { clientId } } };
@@ -408,7 +410,7 @@ namespace SelfSortingStorage.Cupboard
             var name = item.Id.Split('/')[1];
             var quantity = item.Quantity >= 100 ? 99 : item.Quantity;
             var offset = quantity < 10 ? 6 : 5;
-            var cutName = name.Length >= offset + 1 ? name.Remove(offset) : name;
+            var cutName = name.Length >= offset + 1 ? name[..offset] : name;
             return cutName + " x" + quantity + "\n";
         }
 

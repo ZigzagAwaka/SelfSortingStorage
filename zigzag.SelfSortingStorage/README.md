@@ -35,17 +35,25 @@ The storage will then sort these tools and put them on display in specific secti
 
 #### Wide Cupboard
 
+For those who wants more space!
+
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades1.PNG)
 
 #### Reset Button
+
+Press it to delete everything stored...
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades2.PNG)
 
 #### Cozy Lights
 
+Some decorative lights for the storage!
+
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades3.PNG)
 
 #### Items list screen
+
+List every stored items on a GeneralImprovements screen.
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades4.png)
 
@@ -60,8 +68,13 @@ The storage will then sort these tools and put them on display in specific secti
 - **Matty_Fixes**
     - If you have [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed, you need to disable either `FixItemsFallingThrough` in GeneralImprovements OR disable `OutOfBounds.Enabled` in Matty_Fixes, because these mods do the same thing.
     - For people that don't want or need GeneralImprovements, it is considered as a soft dependency in the code so you can remove it safely. But if you remove it then you'll need to install Matty_Fixes instead.
+- **Problems buying the Smart Cupboard in the store**
+    - This is a common issue for similarly named terminal objects, try installing [TerminalConflictFix](https://thunderstore.io/c/lethal-company/p/SylviBlossom/TerminalConflictFix/) to fix this.
+    - Another alternative solution is to use [DarmuhsTerminalStuff](https://thunderstore.io/c/lethal-company/p/darmuh/darmuhsTerminalStuff/) like this user suggested [here on github](https://github.com/ZigzagAwaka/SelfSortingStorage/issues/2#issuecomment-2708783243).
 - **CruiserImproved and custom ships**
     - If you have a custom ship mod AND [CruiserImproved](https://thunderstore.io/c/lethal-company/p/DiggC/CruiserImproved/) installed, reloading a save when the SSS is already unlocked will break it until a complete reset. Please wait for CruiserImproved to be updated to support custom ships.
+- **TerminalFormatter item listing**
+    - If you want stored items to be listed in the "owned" section of the shop when using [TerminalFormatter](https://thunderstore.io/c/lethal-company/p/mrov/TerminalFormatter/), then you'll need to install [ScienceBird_Tweaks](https://thunderstore.io/c/lethal-company/p/ScienceBird/ScienceBird_Tweaks/) !
 
 ##
 
