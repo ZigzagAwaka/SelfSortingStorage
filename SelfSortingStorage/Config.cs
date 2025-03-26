@@ -8,6 +8,7 @@ namespace SelfSortingStorage
     {
         public bool GeneralImprovements = false;
         public readonly Dictionary<int, int> rowsOrder = new Dictionary<int, int>();
+        public readonly List<string> itemsBlacklist = new List<string>();
         public readonly ConfigEntry<bool> enableSaving;
         public readonly ConfigEntry<bool> allowScrapItems;
         public readonly ConfigEntry<bool> scanNode;
@@ -16,6 +17,7 @@ namespace SelfSortingStorage
         public readonly ConfigEntry<bool> rescaleItems;
         public readonly ConfigEntry<bool> perfectRescale;
         public readonly ConfigEntry<string> rowsOrderStr;
+        public readonly ConfigEntry<string> blacklistStr;
         public readonly ConfigEntry<int> cupboardPrice;
         public readonly ConfigEntry<bool> wideVersion;
         public readonly ConfigEntry<bool> cozyLights;
@@ -34,6 +36,7 @@ namespace SelfSortingStorage
             rescaleItems = cfg.Bind("Storage", "Rescale big items", true, "Big items will be rescaled when stored in the Smart Cupboard (based on their collider volume).");
             perfectRescale = cfg.Bind("Storage", "Perfect rescale", true, "Change the rescale algorithm to have items perfectly rescaled when stored (based on their collider max size).");
             rowsOrderStr = cfg.Bind("Storage", "Rows order", "1,2,3,4", "Specify the order of items placement in the storage. Each number represents a shelve of the storage from top to bottom and the first one to be filled will be the number '1'.\nExample: Having an order of '1,2,3,4' will fill items from top to bottom, and having '3,1,2,4' will fill the middle shelves first.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening (or press the Reset Button).");
+            blacklistStr = cfg.Bind("Storage", "Items Blacklist", "clipboard,Sticky note,Utility Belt", "Comma separated list of items names that will be rejected from the storage.");
             cupboardPrice = cfg.Bind("Shop", "Price", 20, "The price of the Smart Cupboard in the store.");
             wideVersion = cfg.Bind("Upgrades", "Wide Cupboard", false, "Activate the S4 upgrade, turns the Smart Cupboard into a wider version.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening (or press the Reset Button).");
             cozyLights = cfg.Bind("Upgrades", "Cozy Lights", true, "Activate the cozy lights upgrade, adds some lights on the shelves and a button to turn them on and off.");
@@ -53,6 +56,16 @@ namespace SelfSortingStorage
             if (!GeneralImprovements)
                 Plugin.logger.LogError("GeneralImprovements is not installed! The mod will still work but you may notice some item rotation issues.");
 
+            if (!string.IsNullOrEmpty(blacklistStr.Value))
+            {
+                foreach (string itemStr in blacklistStr.Value.Split(',').Select(s => s.Trim()))
+                {
+                    itemsBlacklist.Add(itemStr);
+                }
+                if (itemsBlacklist.Count != 0)
+                    RegisterBlacklist();
+            }
+
             if (rowsOrderStr.Value == (string)rowsOrderStr.DefaultValue)
                 return;
             int i = 0;
@@ -67,6 +80,19 @@ namespace SelfSortingStorage
                 Plugin.logger.LogWarning("Invalid 'Rows order' config value. Default order will be used.");
                 rowsOrder.Clear();
             }
+        }
+
+        private void RegisterBlacklist()
+        {
+            Cupboard.SmartCupboard.AddTriggerValidation(BlacklistValidation, "[Item blacklisted]");
+        }
+
+        private bool BlacklistValidation(GameNetcodeStuff.PlayerControllerB player)
+        {
+            var item = player.currentlyHeldObjectServer;
+            if (itemsBlacklist.Exists((i) => i == item.itemProperties.itemName))
+                return false;
+            return true;
         }
     }
 }

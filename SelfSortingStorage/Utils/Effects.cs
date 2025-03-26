@@ -91,6 +91,11 @@ namespace SelfSortingStorage.Utils
                     notValidText = "[Bodies not allowed]";
                     return false;
                 }
+                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Stun grenade" && player.currentlyHeldObjectServer is StunGrenadeItem grenade && grenade.hasExploded)
+                {
+                    notValidText = "[Exploded grenades not allowed]";
+                    return false;
+                }
                 if (player.currentlyHeldObjectServer.itemProperties.itemName == "Belt bag")
                 {
                     notValidText = "[Belt bags not compatible]";

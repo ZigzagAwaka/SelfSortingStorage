@@ -1,3 +1,7 @@
+## 1.0.9
+- Exploded stun grenades are no longer accepted in the storage
+- Added `Items Blacklist` config, pre-configured with some items that can cause issues
+
 ## 1.0.8
 - Modified the cabinet model so that all shelves are now the same size
 - Made buttons easier to press
