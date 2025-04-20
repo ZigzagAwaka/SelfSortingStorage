@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SelfSortingStorage.Cupboard;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ namespace SelfSortingStorage.Utils
         [HarmonyPatch("Start")]
         public static void SetSmartCupboardDefaultScreen()
         {
-            if (!SmartCupboard.SpawnedInShip && Plugin.config.GeneralImprovements && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+            if (!SmartCupboard.SpawnedInShip && Plugin.config.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
                 Effects.SetScreenText(Plugin.config.customScreenPos.Value - 1, $"<color=#ffff00>{"Smart Cupboard:\n$" + Plugin.config.cupboardPrice.Value}</color>");
         }
 
@@ -152,6 +153,30 @@ namespace SelfSortingStorage.Utils
             __instance.selectionOutlineMesh.transform.eulerAngles = __instance.placingObject.mainMesh.transform.eulerAngles;
             __instance.selectionOutlineRenderer.enabled = true;
             return false;
+        }
+    }
+
+
+    [HarmonyPatch(typeof(MenuManager))]
+    internal class MenuManagerPatch
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("Awake")]
+        public static void AwakePatch()
+        {
+            foreach (var message in Effects.MenuPopupMessages)
+            {
+                var menuContainer = GameObject.Find("/Canvas/MenuContainer/");
+                var lanPopup = GameObject.Find("Canvas/MenuContainer/LANWarning/");
+                if (lanPopup == null)
+                    return;
+                var newPopup = Object.Instantiate(lanPopup, menuContainer.transform);
+                newPopup.name = "SSS_ModsIncompatibility";
+                newPopup.SetActive(true);
+                var textHolder = newPopup.transform.Find("Panel/NotificationText");
+                var textMesh = textHolder.GetComponent<TextMeshProUGUI>();
+                textMesh.text = message;
+            }
         }
     }
 }

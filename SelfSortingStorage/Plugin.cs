@@ -14,11 +14,12 @@ namespace SelfSortingStorage
 {
     [BepInPlugin(GUID, NAME, VERSION)]
     [BepInDependency("ShaosilGaming.GeneralImprovements", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("mattymatty.MattyFixes", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.0.9";
+        const string VERSION = "1.1.0";
 
         public static Plugin instance;
         public static ManualLogSource logger;

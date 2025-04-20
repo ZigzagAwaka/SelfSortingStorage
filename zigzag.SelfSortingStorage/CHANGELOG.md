@@ -1,3 +1,6 @@
+## 1.1.0
+- f
+
 ## 1.0.9
 - Exploded stun grenades are no longer accepted in the storage
 - Added `Items Blacklist` config, pre-configured with some items that can cause issues

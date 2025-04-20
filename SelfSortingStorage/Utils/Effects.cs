@@ -25,6 +25,7 @@ namespace SelfSortingStorage.Utils
             }
         }
 
+        public static readonly List<string> MenuPopupMessages = new List<string>();
 
         public static void SetupNetwork()
         {
@@ -53,7 +54,27 @@ namespace SelfSortingStorage.Utils
 
         public static void Message(string title, string bottom, bool warning = false)
         {
-            HUDManager.Instance.DisplayTip(title, bottom, warning);
+            HUDManager.Instance?.DisplayTip(title, bottom, warning);
+        }
+
+        public static bool GetConfigGI(int wantedConfigID)
+        {
+            return wantedConfigID switch
+            {
+                0 => GeneralImprovements.Plugin.FixItemsLoadingSameRotation.Value,
+                1 => GeneralImprovements.Plugin.FixItemsFallingThrough.Value,
+                2 => GeneralImprovements.Plugin.ShipPlaceablesCollide.Value,
+                _ => false,
+            };
+        }
+
+        public static bool GetConfigMF(int wantedConfigID)
+        {
+            return wantedConfigID switch
+            {
+                0 => MattyFixes.MattyFixes.PluginConfig.OutOfBounds.Enabled.Value,
+                _ => false,
+            };
         }
 
         public static void SetScreenText(int screenID, string text)

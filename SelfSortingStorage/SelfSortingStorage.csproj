@@ -25,6 +25,10 @@
     <Reference Include="LethalLib">
       <HintPath>..\..\_utils\Librairies\LethalLib.dll</HintPath>
     </Reference>
+    <Reference Include="MattyFixes">
+      <HintPath>..\..\_utils\Librairies\MattyFixes.dll</HintPath>
+      <Publicize>true</Publicize>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\_utils\Librairies\Newtonsoft.Json.dll</HintPath>
     </Reference>
