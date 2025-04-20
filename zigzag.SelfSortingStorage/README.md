@@ -1,12 +1,14 @@
 # Self Sorting Storage
 
-Adds a new unlockable ship ugrade to the game : the **Smart Cupboard**!
+### Adds a new unlockable ship ugrade to the game : the **Smart Cupboard**!
 
 This storage container who looks a lot like the vanilla Cupboard furniture, has the effect to automatically sorts equipment items that you store in.
 
 The Smart Cupboard can be acquired by spending 20 credits in the store.
 
 Compatible with v69 of Lethal Company.
+
+> **This mod requires [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) OR [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed to avoid some item placement issues.** For more info, check the compatibility notes below.
 
 ##
 
@@ -62,12 +64,16 @@ List every stored items on a GeneralImprovements screen.
 ##
 
 ### Compatibility notes
+- **Required item fixing mods**
+    - This mod requires the support of an item fixing mod in order to avoid item placement issues. You have multiple mods that can work but the most effective ones are [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) and [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/).
+    - It is recommended to have at least one of these 2 installed before using SelfSortingStorage. However, other similar mods may also work.
 - **GeneralImprovements**
-    - [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) is a required dependency because I'm rotating items based on the `FixItemsLoadingSameRotation` + `FixItemsFallingThrough` configs. This is needed for items to face the correct direction when stored.
-    - `ShipPlaceablesCollide` config in GeneralImprovements NEEDS to be activated (at least from my personnal observations).
+    - If you have [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) installed, you need to have `FixItemsLoadingSameRotation` AND `FixItemsFallingThrough` configs enabled. This is needed for items to face the correct direction when stored.
+    - The `ShipPlaceablesCollide` config also needs to be enabled to avoid items vanishing when stored.
+    - *All of these configs are enabled by default if you haven't change the config file.*
 - **Matty_Fixes**
-    - If you have [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed, you need to disable either `FixItemsFallingThrough` in GeneralImprovements OR disable `OutOfBounds.Enabled` in Matty_Fixes, because these mods do the same thing.
-    - For people that don't want or need GeneralImprovements, it is considered as a soft dependency in the code so you can remove it safely. But if you remove it then you'll need to install Matty_Fixes instead.
+    - If you have [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed, you need to have `OutOfBounds.Enabled` config enabled *(which is enabled by default)*.
+    - **If you have both GeneralImprovements and Matty_Fixes installed**, then you'll need to disable either `FixItemsFallingThrough` in GeneralImprovements OR disable `OutOfBounds.Enabled` in Matty_Fixes, because these mods do the same thing.
 - **Problems buying the Smart Cupboard in the store**
     - This is a common issue for similarly named terminal objects, try installing [TerminalConflictFix](https://thunderstore.io/c/lethal-company/p/SylviBlossom/TerminalConflictFix/) to fix this.
     - Another alternative solution is to use [DarmuhsTerminalStuff](https://thunderstore.io/c/lethal-company/p/darmuh/darmuhsTerminalStuff/) like this user suggested [here on github](https://github.com/ZigzagAwaka/SelfSortingStorage/issues/2#issuecomment-2708783243).
@@ -106,7 +112,7 @@ If you want to suggest new features or contact me please go to the mod release p
 
 ##
 
-# Credits
+## Credits
 
 - Thanks [Xu Xiaolan](https://www.youtube.com/shorts/Kt5mnWK-rgI) for helping with some parts of the code, and also for suggesting good things!
 
