@@ -1,6 +1,6 @@
 {
     "name": "SelfSortingStorage",
-    "version_number": "1.1.0",
+    "version_number": "1.1.1",
     "website_url": "https://github.com/ZigzagAwaka/SelfSortingStorage",
     "description": "Adds a special storage container to the shop that automatically sorts equipment items (scraps are also supported).",
     "dependencies": [

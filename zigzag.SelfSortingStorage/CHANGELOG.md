@@ -1,3 +1,6 @@
+## 1.1.1
+- Maneater enemies are no longer accepted in the storage
+
 ## 1.1.0
 - Removed GeneralImprovements of the dependencies in the manifest to help with modpack making. However, an item fixing mod is still required to avoid issues, as stated in the README
 - Error messages will now be displayed in-game when [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) or [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) is not installed, and also, messages will appear if you have wrongly set your mods configs (these message will be displayed on the main menu as well as when purchasing the SSS)
