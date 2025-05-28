@@ -15,11 +15,12 @@ namespace SelfSortingStorage
     [BepInPlugin(GUID, NAME, VERSION)]
     [BepInDependency("ShaosilGaming.GeneralImprovements", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mattymatty.MattyFixes", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("Toybox.LittleCompany", BepInDependency.DependencyFlags.SoftDependency)]
     public class Plugin : BaseUnityPlugin
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.1.1";
+        const string VERSION = "1.1.2";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -31,7 +32,15 @@ namespace SelfSortingStorage
 
         void HarmonyPatchAll()
         {
-            harmony.PatchAll();
+            harmony.CreateClassProcessor(typeof(GameNetworkManagerPatch), true).Patch();
+            harmony.CreateClassProcessor(typeof(StartOfRoundPatch), true).Patch();
+            harmony.CreateClassProcessor(typeof(RoundManagerPatch), true).Patch();
+            harmony.CreateClassProcessor(typeof(BeltBagItemPatch), true).Patch();
+            harmony.CreateClassProcessor(typeof(MenuManagerPatch), true).Patch();
+            if (config.LittleCompanyInstalled)
+                harmony.CreateClassProcessor(typeof(ShipBuildModeManagerLittleCompanyPatch), true).Patch();
+            else
+                harmony.CreateClassProcessor(typeof(ShipBuildModeManagerPatch), true).Patch();
         }
 
         private void ReplaceTransform(GameObject prefab, string originName, string destinationName)

@@ -157,6 +157,25 @@ namespace SelfSortingStorage.Utils
     }
 
 
+    [HarmonyPatch(typeof(LittleCompany.patches.ShipBuildModeManagerPatch))]
+    internal class ShipBuildModeManagerLittleCompanyPatch
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("CreateGhostObjectAndHighlight_PostFix")]
+        public static bool CreateGhostObjectAndHighlightPatch(object[] __args)
+        {
+            var buildModeManager = (ShipBuildModeManager)__args[0];
+            if (buildModeManager.placingObject == null || buildModeManager.placingObject.parentObject.name != "SSS_Module_WideVariant(Clone)")
+                return true;
+            LittleCompany.modifications.ShipObjectModification.ScalingOf(buildModeManager.placingObject);
+            var scale = buildModeManager.placingObject.mainMesh.transform.localScale;
+            buildModeManager.ghostObjectMesh.transform.localScale = scale;
+            buildModeManager.selectionOutlineMesh.transform.localScale = scale * 1.04f;
+            return false;
+        }
+    }
+
+
     [HarmonyPatch(typeof(MenuManager))]
     internal class MenuManagerPatch
     {

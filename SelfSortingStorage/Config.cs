@@ -10,6 +10,7 @@ namespace SelfSortingStorage
         public bool GeneralImprovementsInstalled = false;
         public bool MattyFixesInstalled = false;
         public bool CompatibilityModsAreValid = false;
+        public bool LittleCompanyInstalled = false;
         public readonly Dictionary<int, int> rowsOrder = new Dictionary<int, int>();
         public readonly List<string> itemsBlacklist = new List<string>();
         public readonly ConfigEntry<bool> enableSaving;
@@ -55,6 +56,7 @@ namespace SelfSortingStorage
             var pluginInfos = BepInEx.Bootstrap.Chainloader.PluginInfos;
             GeneralImprovementsInstalled = pluginInfos.ContainsKey("ShaosilGaming.GeneralImprovements");
             MattyFixesInstalled = pluginInfos.ContainsKey("mattymatty.MattyFixes");
+            LittleCompanyInstalled = pluginInfos.ContainsKey("Toybox.LittleCompany");
             CompatibilityModsAreValid = CheckCompatibility(registerPopup: true);
 
             if (!string.IsNullOrEmpty(blacklistStr.Value))

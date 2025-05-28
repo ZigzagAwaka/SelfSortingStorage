@@ -1,3 +1,6 @@
+## 1.1.2
+- Compatibility patch for [LittleCompany](https://thunderstore.io/c/lethal-company/p/Toybox/LittleCompany/)
+
 ## 1.1.1
 - Maneater enemies are no longer accepted in the storage
 
