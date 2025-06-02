@@ -1,10 +1,11 @@
 {
     "name": "SelfSortingStorage",
-    "version_number": "1.1.2",
+    "version_number": "1.2.0",
     "website_url": "https://github.com/ZigzagAwaka/SelfSortingStorage",
     "description": "Adds a special storage container to the shop that automatically sorts equipment items (scraps are also supported).",
     "dependencies": [
-        "Evaisa-LethalLib-0.16.1",
+        "Evaisa-LethalLib-1.1.0",
+        "mattymatty-Matty_Fixes-1.1.35",
         "BepInEx-BepInExPack-5.4.2100"
     ]
 }

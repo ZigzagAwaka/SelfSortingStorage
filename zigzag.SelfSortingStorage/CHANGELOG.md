@@ -1,3 +1,9 @@
+## 1.2.0
+- Updated to v70
+- Fixed items position in the shelves for v70
+- Fixed compatibility and added [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) as a dependency in the mod's manifest file
+- Updated compatibility notes in the README
+
 ## 1.1.2
 - Compatibility patch for [LittleCompany](https://thunderstore.io/c/lethal-company/p/Toybox/LittleCompany/)
 

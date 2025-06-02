@@ -5,6 +5,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+  </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\_utils\Librairies\0Harmony.dll</HintPath>
@@ -29,8 +35,8 @@
       <HintPath>..\..\_utils\Librairies\LittleCompany.dll</HintPath>
       <Publicize>true</Publicize>
     </Reference>
-    <Reference Include="MattyFixes">
-      <HintPath>..\..\_utils\Librairies\MattyFixes.dll</HintPath>
+    <Reference Include="Matty's Fixes">
+      <HintPath>..\..\_utils\Librairies\Matty's Fixes.dll</HintPath>
       <Publicize>true</Publicize>
     </Reference>
     <Reference Include="Newtonsoft.Json">

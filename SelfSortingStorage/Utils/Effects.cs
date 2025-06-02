@@ -191,13 +191,19 @@ namespace SelfSortingStorage.Utils
             }
             yield return new WaitForEndOfFrame();
             GrabbableObject component = itemNetObject.GetComponent<GrabbableObject>();
-            if (!component.IsServer)
+            if (component.IsServer)
+            {
+                var targetPosition = Vector3.zero + component.itemProperties.verticalOffset * new Vector3(0, 0, 1);
+                component.transform.localPosition = targetPosition;
+                component.targetFloorPosition = targetPosition;
+            }
+            else
             {
                 cupboard.GetPlacePosition(spawnIndex, out var parent, out _, out _);
                 var targetPosition = Vector3.zero + component.itemProperties.verticalOffset * new Vector3(0, 0, 1);
                 component.parentObject = null;
                 component.transform.SetParent(parent ?? StartOfRound.Instance.elevatorTransform, worldPositionStays: true);
-                component.startFallingPosition = component.transform.localPosition;
+                component.startFallingPosition = targetPosition;
                 component.transform.localPosition = targetPosition;
                 component.targetFloorPosition = targetPosition;
                 component.reachedFloorTarget = true;
