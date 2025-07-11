@@ -20,7 +20,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.2.0";
+        const string VERSION = "1.2.1";
 
         public static Plugin instance;
         public static ManualLogSource logger;

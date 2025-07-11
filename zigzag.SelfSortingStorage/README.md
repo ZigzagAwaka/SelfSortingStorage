@@ -6,7 +6,7 @@ This storage container who looks a lot like the vanilla Cupboard furniture, has 
 
 The Smart Cupboard can be acquired by spending 20 credits in the store.
 
-Compatible with v70 of Lethal Company.
+Compatible with v70/v72 of Lethal Company.
 
 > **This mod requires [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed to avoid some item placement issues. [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) can also be installed to improve item rotations.** For more info, check the compatibility notes below.
 
@@ -80,6 +80,8 @@ List every stored items on a GeneralImprovements screen.
     - Another alternative solution is to use [DarmuhsTerminalStuff](https://thunderstore.io/c/lethal-company/p/darmuh/darmuhsTerminalStuff/) like this user suggested [here on github](https://github.com/ZigzagAwaka/SelfSortingStorage/issues/2#issuecomment-2708783243).
 - **CruiserImproved and custom ships**
     - If you have a custom ship mod AND [CruiserImproved](https://thunderstore.io/c/lethal-company/p/DiggC/CruiserImproved/) installed, reloading a save when the SSS is already unlocked will break it until a complete reset. Please wait for CruiserImproved to be updated to support custom ships.
+- **Forced moving items mods**
+    - Mods that can force move items such as SellMyScrap when selling at the Company are not compatible (can be probably tweaked to avoid issues).
 - **TerminalFormatter item listing**
     - If you want stored items to be listed in the "owned" section of the shop when using [TerminalFormatter](https://thunderstore.io/c/lethal-company/p/mrov/TerminalFormatter/), then you'll need to install [ScienceBird_Tweaks](https://thunderstore.io/c/lethal-company/p/ScienceBird/ScienceBird_Tweaks/) !
 

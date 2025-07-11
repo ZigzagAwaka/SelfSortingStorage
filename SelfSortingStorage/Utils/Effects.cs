@@ -112,9 +112,9 @@ namespace SelfSortingStorage.Utils
                     notValidText = "[Bodies not allowed]";
                     return false;
                 }
-                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Maneater")
+                if (player.currentlyHeldObjectServer.gameObject != null && player.currentlyHeldObjectServer.gameObject.GetComponent<EnemyAI>() != null)
                 {
-                    notValidText = "[Good try, but nope]";
+                    notValidText = "[Enemies not allowed]";
                     return false;
                 }
                 if (player.currentlyHeldObjectServer.itemProperties.itemName == "Stun grenade" && player.currentlyHeldObjectServer is StunGrenadeItem grenade && grenade.hasExploded)

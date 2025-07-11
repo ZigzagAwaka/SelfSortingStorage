@@ -1,3 +1,6 @@
+## 1.2.1
+- Added a check to prevent any grabbable enemies to be stored, not just Maneaters
+
 ## 1.2.0
 - Updated to v70
 - Fixed items position in the shelves for v70
