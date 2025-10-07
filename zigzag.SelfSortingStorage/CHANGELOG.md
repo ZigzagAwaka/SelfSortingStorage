@@ -1,3 +1,9 @@
+## 1.3.0
+- Updated networking to work for v73 of Lethal Company
+- Added [FixPluginTypesSerialization](https://thunderstore.io/c/lethal-company/p/Evaisa/FixPluginTypesSerialization/) as a dependency *(this was needed since 1.0.0 oops)*
+- Updated the text displayed when players tries to store an item that is blacklisted
+- Updated the text displayed when players tries to store another player's body, a monster or an exploded stun grenade
+
 ## 1.2.1
 - Added a check to prevent any grabbable enemies to be stored, not just Maneaters
 

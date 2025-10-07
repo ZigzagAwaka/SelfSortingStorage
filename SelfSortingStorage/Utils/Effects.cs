@@ -107,19 +107,14 @@ namespace SelfSortingStorage.Utils
                     notValidText = "[Wait for ship to " + (StartOfRound.Instance.shipIsLeaving ? "leave" : "land") + "]";
                     return false;
                 }
-                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Body")
+                if ((player.currentlyHeldObjectServer.itemProperties.itemName == "Body") || (player.currentlyHeldObjectServer.gameObject != null && player.currentlyHeldObjectServer.gameObject.GetComponent<EnemyAI>() != null))
                 {
-                    notValidText = "[Bodies not allowed]";
-                    return false;
-                }
-                if (player.currentlyHeldObjectServer.gameObject != null && player.currentlyHeldObjectServer.gameObject.GetComponent<EnemyAI>() != null)
-                {
-                    notValidText = "[Enemies not allowed]";
+                    notValidText = "[It doesn't fit]";
                     return false;
                 }
                 if (player.currentlyHeldObjectServer.itemProperties.itemName == "Stun grenade" && player.currentlyHeldObjectServer is StunGrenadeItem grenade && grenade.hasExploded)
                 {
-                    notValidText = "[Exploded grenades not allowed]";
+                    notValidText = "[Exploded grenades are illegal]";
                     return false;
                 }
                 if (player.currentlyHeldObjectServer.itemProperties.itemName == "Belt bag")

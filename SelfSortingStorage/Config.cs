@@ -87,7 +87,7 @@ namespace SelfSortingStorage
 
         private void RegisterBlacklist()
         {
-            Cupboard.SmartCupboard.AddTriggerValidation(BlacklistValidation, "[Item blacklisted]");
+            Cupboard.SmartCupboard.AddTriggerValidation(BlacklistValidation, "[Item rejected]");
         }
 
         private bool BlacklistValidation(GameNetcodeStuff.PlayerControllerB player)

@@ -6,7 +6,7 @@ This storage container who looks a lot like the vanilla Cupboard furniture, has 
 
 The Smart Cupboard can be acquired by spending 20 credits in the store.
 
-Compatible with v70/v72 of Lethal Company.
+Compatible with v73 of Lethal Company.
 
 > **This mod requires [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed to avoid some item placement issues. [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) can also be installed to improve item rotations.** For more info, check the compatibility notes below.
 
@@ -125,6 +125,6 @@ If you want to suggest new features or contact me please go to the mod release p
 
 - Some parts ot the code is based on the [ShipInventory](https://thunderstore.io/c/lethal-company/p/WarperSan/ShipInventory/) implementation by [WarperSan](https://thunderstore.io/c/lethal-company/p/WarperSan/), such as the items data structure which has been modified to better fit the SelfSortingStorage mod.
 
-- Cupboard asset is ripped from [Lethal Company](https://store.steampowered.com/app/1966720/Lethal_Company/).
+- Cupboard asset is ripped and edited from [Lethal Company](https://store.steampowered.com/app/1966720/Lethal_Company/).
 
 - "vent_chute" by [jazz-the-giraffe](https://sketchfab.com/3d-models/vent-chute-961b5fb81e694f94ab1407028c7dc998) is a free 3D model licensed under Creative Commons Attribution.
