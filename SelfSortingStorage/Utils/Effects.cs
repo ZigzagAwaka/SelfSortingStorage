@@ -59,6 +59,7 @@ namespace SelfSortingStorage.Utils
 
         public static void DawnLibRegisterSSS(UnlockableItem sssUnlockable)
         {
+            Dawn.DawnLib.RegisterNetworkPrefab(sssUnlockable.prefabObject);
             // CANT USE LAMBDA EXPRESSIONS BECAUSE DAWNLIB IS A SOFT DEPENDENCY
             var unlockableInfoBuilder = new Dawn.UnlockableInfoBuilder(Dawn.NamespacedKey<Dawn.DawnUnlockableItemInfo>.From("self_sorting_storage", "smart_cupboard"), sssUnlockable);
             unlockableInfoBuilder.SetCost(Plugin.config.cupboardPrice.Value);

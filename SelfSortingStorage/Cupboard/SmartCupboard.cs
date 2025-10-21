@@ -2,6 +2,7 @@
 using SelfSortingStorage.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace SelfSortingStorage.Cupboard
         private readonly List<int> indexToRemove = new List<int>();
         private GrabbableObject? awaitingObject = null;
         private bool responseOnAwaiting = false;
+        private bool isRespawningFromSave = false;
         public static bool SpawnedInShip { get; private set; } = false;
 
         public SmartCupboard() { }
@@ -36,6 +38,8 @@ namespace SelfSortingStorage.Cupboard
             }
             SpawnedInShip = true;
             PreparePlacePositions();
+            if (IsServer && Plugin.config.permanentItems.Count != 0)
+                StartCoroutine(ForceStorePermanentItems());
             if (!Compatibility.CompatibilityModsAreValid)
                 Compatibility.CheckCompatibilitySSS(displayTip: true);
             if (!IsServer)
@@ -125,6 +129,7 @@ namespace SelfSortingStorage.Cupboard
 
         public IEnumerator ReloadPlacedItems()  // used by SavingModule
         {
+            isRespawningFromSave = true;
             yield return new WaitForSeconds(1);  // wait for items to spawn
             int spawnIndex = 0;
             float distanceSearch = 1f;
@@ -149,6 +154,31 @@ namespace SelfSortingStorage.Cupboard
                     }
                     spawnIndex++;
                 }
+            }
+        }
+
+        private IEnumerator ForceStorePermanentItems()
+        {
+            yield return new WaitForSeconds(1f);  // wait for ReloadPlacedItems()
+            if (isRespawningFromSave)
+            {
+                yield break;
+            }
+            foreach (var permanent in Plugin.config.permanentItems)
+            {
+                var item = Effects.GetItem(permanent.Item1);
+                if (item == null || item.spawnPrefab == null)
+                    continue;
+                var grabbableObject = item.spawnPrefab.GetComponent<GrabbableObject>();
+                if (grabbableObject == null)
+                    continue;
+                var itemData = new SmartMemory.Data(grabbableObject) { Quantity = permanent.Item2 };
+                itemData.Values.AddRange(Enumerable.Repeat(itemData.Values[0], itemData.Quantity - 1));
+                itemData.Saves.AddRange(Enumerable.Repeat(itemData.Saves[0], itemData.Quantity - 1));
+                if (memory.StoreData(itemData, out int spawnIndex))
+                    SpawnItem(itemData, spawnIndex);
+                if (Plugin.config.verboseLogging.Value)
+                    Plugin.logger.LogWarning(memory.ToString());
             }
         }
 
