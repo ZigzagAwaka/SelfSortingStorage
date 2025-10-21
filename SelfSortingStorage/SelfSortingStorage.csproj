@@ -25,6 +25,10 @@
     <Reference Include="BepInEx">
       <HintPath>..\..\_utils\Librairies\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="com.github.teamxiaolan.dawnlib">
+      <HintPath>..\..\_utils\Librairies\com.github.teamxiaolan.dawnlib.dll</HintPath>
+	  <Publicize>true</Publicize>
+    </Reference>
     <Reference Include="GeneralImprovements">
       <HintPath>..\..\_utils\Librairies\GeneralImprovements.dll</HintPath>
     </Reference>
@@ -38,6 +42,9 @@
     <Reference Include="Matty's Fixes">
       <HintPath>..\..\_utils\Librairies\Matty's Fixes.dll</HintPath>
       <Publicize>true</Publicize>
+    </Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp">
+      <HintPath>..\..\_utils\Librairies\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\_utils\Librairies\Newtonsoft.Json.dll</HintPath>
@@ -87,7 +94,7 @@
   </ItemGroup>
 
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
-    <Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')"/>
+    <Exec Command="netcode-patch -uv 2022.3.62 -nv 1.12.0 -tv 1.0.0 &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
   </Target>
 
   <ItemGroup>

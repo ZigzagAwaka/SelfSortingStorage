@@ -24,10 +24,11 @@ namespace SelfSortingStorage.Cupboard
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            memory.SetupInitialState();
             if (IsServer)
             {
-                memory.Initialize();
-                if (Plugin.config.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+                memory.InitializeCache();
+                if (Compatibility.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
                     StartCoroutine(DisplayOnScreen());
                 var hangarShip = GameObject.Find("/Environment/HangarShip");
                 if (hangarShip != null)
@@ -35,8 +36,8 @@ namespace SelfSortingStorage.Cupboard
             }
             SpawnedInShip = true;
             PreparePlacePositions();
-            if (!Plugin.config.CompatibilityModsAreValid)
-                Plugin.config.CheckCompatibility(displayTip: true);
+            if (!Compatibility.CompatibilityModsAreValid)
+                Compatibility.CheckCompatibilitySSS(displayTip: true);
             if (!IsServer)
                 StartCoroutine(SyncCupboard());
         }
@@ -425,7 +426,7 @@ namespace SelfSortingStorage.Cupboard
         [ClientRpc]
         private void SetScreenTextClientRpc(string text)
         {
-            if (Plugin.config.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+            if (Compatibility.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
                 Effects.SetScreenText(Plugin.config.customScreenPos.Value - 1, text);
         }
     }

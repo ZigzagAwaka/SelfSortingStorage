@@ -1,4 +1,4 @@
-﻿using LethalLib.Modules;
+﻿using SelfSortingStorage.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -85,22 +85,24 @@ namespace SelfSortingStorage.Cupboard
 
 
         public static SmartMemory? Instance;
-        public readonly int Capacity = 16;
+        public int Capacity { get; private set; } = 16;
         public int Size = 0;
         public readonly List<int> IgnoreSpaces = new List<int>();
         public readonly List<List<Data>> ItemList = new List<List<Data>>(4);
         public readonly static Dictionary<string, Item> CacheItems = new Dictionary<string, Item>();
 
-        public SmartMemory()
-        {
-            if (Plugin.instance.ROWS_LENGTH == 7)
-                Capacity = 28;
-            ClearAll(false);
-        }
+        public SmartMemory() { }
 
         public bool IsFull()
         {
             return Size == Capacity;
+        }
+
+        public void SetupInitialState()
+        {
+            if (Plugin.instance.ROWS_LENGTH == 7)
+                Capacity = 28;
+            ClearAll(false);
         }
 
         public void ClearAll(bool resetData = true)
@@ -120,15 +122,13 @@ namespace SelfSortingStorage.Cupboard
             }
         }
 
-        public void Initialize()
+        public void InitializeCache()
         {
             Instance = this;
-            foreach (var item in Items.scrapItems)
-                CacheItems.TryAdd(item.modName + "/" + item.item.itemName, item.item);
-            foreach (var item in Items.shopItems)
-                CacheItems.TryAdd(item.modName + "/" + item.item.itemName, item.item);
-            foreach (var item in Items.plainItems)
-                CacheItems.TryAdd(item.modName + "/" + item.item.itemName, item.item);
+            if (Compatibility.DawnLibInstalled)
+                Effects.FillUpCacheFromDawnLib(CacheItems);
+            else if (Compatibility.LethalLibInstalled)
+                Effects.FillUpCacheFromLethalLib(CacheItems);
         }
 
         public bool StoreData(Data data, out int spawnIndex, bool freeSpaceOnly = false)

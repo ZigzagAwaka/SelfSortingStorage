@@ -6,17 +6,46 @@ using UnityEngine;
 
 namespace SelfSortingStorage.Utils
 {
-    [HarmonyPatch(typeof(GameNetworkManager))]
-    internal class GameNetworkManagerPatch
+    [HarmonyPatch]
+    internal class SavingPatchVanilla
     {
         [HarmonyPrefix]
-        [HarmonyPatch("SaveItemsInShip")]
+        [HarmonyPatch(typeof(GameNetworkManager), "SaveItemsInShip")]
         public static void SaveSmartCupboard()
         {
             if (!Plugin.config.enableSaving.Value || StartOfRound.Instance == null || !StartOfRound.Instance.IsServer)
                 return;
             string saveFile = GameNetworkManager.Instance.currentSaveFileName;
             SavingModule.Save(saveFile);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(StartOfRound), "LoadShipGrabbableItems")]
+        public static void LoadSmartCupboard()
+        {
+            if (!Plugin.config.enableSaving.Value || StartOfRound.Instance == null || !StartOfRound.Instance.IsServer)
+                return;
+            string saveFile = GameNetworkManager.Instance.currentSaveFileName;
+            SavingModule.Load(saveFile);
+        }
+    }
+
+
+    [HarmonyPatch]
+    internal class SavingPatchDawnLib
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Dawn.Internal.SaveDataPatch), "SaveData", new System.Type[] { typeof(On.GameNetworkManager.orig_SaveItemsInShip), typeof(GameNetworkManager) })]
+        public static void SaveSmartCupboard()
+        {
+            SavingPatchVanilla.SaveSmartCupboard();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Dawn.Internal.SaveDataPatch), "LoadShipGrabbableItems", new System.Type[] { typeof(On.StartOfRound.orig_LoadShipGrabbableItems), typeof(StartOfRound) })]
+        public static void LoadSmartCupboard()
+        {
+            SavingPatchVanilla.LoadSmartCupboard();
         }
     }
 
@@ -25,20 +54,10 @@ namespace SelfSortingStorage.Utils
     internal class StartOfRoundPatch
     {
         [HarmonyPostfix]
-        [HarmonyPatch("LoadShipGrabbableItems")]
-        public static void LoadSmartCupboard()
-        {
-            if (!Plugin.config.enableSaving.Value || StartOfRound.Instance == null || !StartOfRound.Instance.IsServer)
-                return;
-            string saveFile = GameNetworkManager.Instance.currentSaveFileName;
-            SavingModule.Load(saveFile);
-        }
-
-        [HarmonyPostfix]
         [HarmonyPatch("Start")]
         public static void SetSmartCupboardDefaultScreen()
         {
-            if (!SmartCupboard.SpawnedInShip && Plugin.config.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
+            if (!SmartCupboard.SpawnedInShip && Compatibility.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
                 Effects.SetScreenText(Plugin.config.customScreenPos.Value - 1, $"<color=#ffff00>{"Smart Cupboard:\n$" + Plugin.config.cupboardPrice.Value}</color>");
         }
 

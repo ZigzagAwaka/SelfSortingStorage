@@ -1,3 +1,10 @@
+## 1.4.0
+- Added compatibility with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/), and it's now the prefered way to assist this mod as it can replace every other mod's features about fixing item position and rotation
+- Added a system where the mod will fallback to using [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/), [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) and [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) if [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) is not installed or if the `Item Saving` config from DawnLib is disabled
+- Added a check to prevent non valid values from being applied from the `Cupboard Color` config
+- Fixed a minor error in the SSS memory
+- Updated compatibility notes in the README
+
 ## 1.3.0
 - Updated networking to work for v73 of Lethal Company
 - Added [FixPluginTypesSerialization](https://thunderstore.io/c/lethal-company/p/Evaisa/FixPluginTypesSerialization/) as a dependency *(this was needed since 1.0.0 oops)*

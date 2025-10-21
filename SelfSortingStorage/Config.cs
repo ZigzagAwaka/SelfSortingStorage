@@ -7,12 +7,9 @@ namespace SelfSortingStorage
 {
     class Config
     {
-        public bool GeneralImprovementsInstalled = false;
-        public bool MattyFixesInstalled = false;
-        public bool CompatibilityModsAreValid = false;
-        public bool LittleCompanyInstalled = false;
         public readonly Dictionary<int, int> rowsOrder = new Dictionary<int, int>();
         public readonly List<string> itemsBlacklist = new List<string>();
+
         public readonly ConfigEntry<bool> enableSaving;
         public readonly ConfigEntry<bool> allowScrapItems;
         public readonly ConfigEntry<bool> scanNode;
@@ -53,11 +50,8 @@ namespace SelfSortingStorage
 
         public void SetupCustomConfigs()
         {
-            var pluginInfos = BepInEx.Bootstrap.Chainloader.PluginInfos;
-            GeneralImprovementsInstalled = pluginInfos.ContainsKey("ShaosilGaming.GeneralImprovements");
-            MattyFixesInstalled = pluginInfos.ContainsKey("mattymatty.MattyFixes");
-            LittleCompanyInstalled = pluginInfos.ContainsKey("Toybox.LittleCompany");
-            CompatibilityModsAreValid = CheckCompatibility(registerPopup: true);
+            Compatibility.CheckInstalledPlugins();
+            Compatibility.CompatibilityModsAreValid = Compatibility.CheckCompatibilitySSS(registerPopup: true);
 
             if (!string.IsNullOrEmpty(blacklistStr.Value))
             {
@@ -96,67 +90,6 @@ namespace SelfSortingStorage
             if (itemsBlacklist.Exists((i) => i == item.itemProperties.itemName))
                 return false;
             return true;
-        }
-
-        public bool CheckCompatibility(bool registerPopup = false, bool displayTip = false)
-        {
-            int errorID = 0;
-            bool compatibilityValid = true;
-            if (!GeneralImprovementsInstalled && !MattyFixesInstalled)
-            {
-                Plugin.logger.LogError("An additional mod is required for this mod to work properly : GeneralImprovements OR MattyFixes, please install one of these two before playing ! Without it the mod will still work but you may notice some item rotation issues.");
-                compatibilityValid = false;
-                errorID = 6001;
-            }
-            else if (GeneralImprovementsInstalled && !Effects.GetConfigGI(2))
-            {
-                Plugin.logger.LogError("ShipPlaceablesCollide config in GeneralImprovements needs to be enabled !");
-                compatibilityValid = false;
-                errorID = 6002;
-            }
-            else if (!GeneralImprovementsInstalled && MattyFixesInstalled && !Effects.GetConfigMF(0))
-            {
-                Plugin.logger.LogError("OutOfBounds.Enabled config in MattyFixes needs to be enabled !");
-                compatibilityValid = false;
-                errorID = 6003;
-            }
-            else if (GeneralImprovementsInstalled && MattyFixesInstalled && Effects.GetConfigGI(1) == Effects.GetConfigMF(0))
-            {
-                Plugin.logger.LogError("FixItemsFallingThrough config in GeneralImprovements and OutOfBounds.Enabled config in MattyFixes are both " + (Effects.GetConfigMF(0) ? "enabled" : "disabled") + " ! You need one of the two to be enabled and the other to be disabled (I suggest to keep the one in GeneralImprovements).");
-                compatibilityValid = false;
-                errorID = 6004;
-            }
-            else if (GeneralImprovementsInstalled && !MattyFixesInstalled && (!Effects.GetConfigGI(0) || !Effects.GetConfigGI(1)))
-            {
-                Plugin.logger.LogError("FixItemsLoadingSameRotation and FixItemsFallingThrough configs in GeneralImprovements both needs to be enabled !");
-                compatibilityValid = false;
-                errorID = 6005;
-            }
-            if (!compatibilityValid)
-            {
-                if (registerPopup)
-                    switch (errorID)
-                    {
-                        case 6001:
-                            Effects.MenuPopupMessages.Add("An additional mod is required. Please install either GeneralImprovements OR MattyFixes before playing!\nError code: " + errorID);
-                            break;
-                        case 6002:
-                            Effects.MenuPopupMessages.Add("Configs not valid. ShipPlaceablesCollide in GeneralImprovements needs to be enabled!\nError code: " + errorID);
-                            break;
-                        case 6003:
-                            Effects.MenuPopupMessages.Add("Configs not valid. OutOfBounds.Enabled in MattyFixes needs to be enabled!\nError code: " + errorID);
-                            break;
-                        case 6004:
-                            Effects.MenuPopupMessages.Add("Configs missmatch. FixItemsFallingThrough in GeneralImprovements and OutOfBounds.Enabled in MattyFixes can't be both enabled at the same time!\nError code: " + errorID);
-                            break;
-                        case 6005:
-                            Effects.MenuPopupMessages.Add("Configs not valid. FixItemsLoadingSameRotation and FixItemsFallingThrough in GeneralImprovements both needs to be enabled!\nError code: " + errorID);
-                            break;
-                    }
-                if (displayTip)
-                    Effects.Message("SelfSortingStorage", "Mods conflicts detected ! Please check your logs. Error code: " + errorID, true);
-            }
-            return compatibilityValid;
         }
     }
 }

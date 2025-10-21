@@ -57,6 +57,52 @@ namespace SelfSortingStorage.Utils
             HUDManager.Instance?.DisplayTip(title, bottom, warning);
         }
 
+        public static void DawnLibRegisterSSS(UnlockableItem sssUnlockable)
+        {
+            // CANT USE LAMBDA EXPRESSIONS BECAUSE DAWNLIB IS A SOFT DEPENDENCY
+            var unlockableInfoBuilder = new Dawn.UnlockableInfoBuilder(Dawn.NamespacedKey<Dawn.DawnUnlockableItemInfo>.From("self_sorting_storage", "smart_cupboard"), sssUnlockable);
+            unlockableInfoBuilder.SetCost(Plugin.config.cupboardPrice.Value);
+            unlockableInfoBuilder._placeableObjectInfo = new Dawn.UnlockableInfoBuilder.PlaceableObjectBuilder(unlockableInfoBuilder).SetShipUpgrade().Build();
+            var dawnUnlockableItemInfo = unlockableInfoBuilder.Build();
+            Dawn.UnlockableItemExtensions.SetDawnInfo(sssUnlockable, dawnUnlockableItemInfo);  // same here for extension methods
+            Dawn.LethalContent.Unlockables.Register(dawnUnlockableItemInfo);
+        }
+
+        public static void LethalLibRegisterSSS(UnlockableItem sssUnlockable)
+        {
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(sssUnlockable.prefabObject);
+            LethalLib.Modules.Unlockables.RegisterUnlockable(sssUnlockable, Plugin.config.cupboardPrice.Value, LethalLib.Modules.StoreType.ShipUpgrade);
+        }
+
+        public static void FillUpCacheFromDawnLib(Dictionary<string, Item> cache)
+        {
+            foreach (Dawn.DawnItemInfo itemInfo in Dawn.LethalContent.Items.Values)
+            {
+                if (itemInfo.TypedKey.IsVanilla())
+                    continue;
+                cache.TryAdd(itemInfo.TypedKey.Namespace + "/" + itemInfo.Item.itemName, itemInfo.Item);
+            }
+        }
+
+        public static void FillUpCacheFromLethalLib(Dictionary<string, Item> cache)
+        {
+            foreach (var item in LethalLib.Modules.Items.scrapItems)
+                cache.TryAdd(item.modName + "/" + item.item.itemName, item.item);
+            foreach (var item in LethalLib.Modules.Items.shopItems)
+                cache.TryAdd(item.modName + "/" + item.item.itemName, item.item);
+            foreach (var item in LethalLib.Modules.Items.plainItems)
+                cache.TryAdd(item.modName + "/" + item.item.itemName, item.item);
+        }
+
+        public static bool GetConfigDL(int wantedConfigID)
+        {
+            return wantedConfigID switch
+            {
+                0 => Dawn.Internal.DawnConfig.DisableDawnItemSaving,
+                _ => false,
+            };
+        }
+
         public static bool GetConfigGI(int wantedConfigID)
         {
             return wantedConfigID switch

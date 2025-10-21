@@ -2,8 +2,6 @@
 using BepInEx.Logging;
 using GameNetcodeStuff;
 using HarmonyLib;
-using LethalLib.Extras;
-using LethalLib.Modules;
 using SelfSortingStorage.Utils;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +11,8 @@ using UnityEngine;
 namespace SelfSortingStorage
 {
     [BepInPlugin(GUID, NAME, VERSION)]
+    [BepInDependency("evaisa.lethallib", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.github.teamxiaolan.dawnlib", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("ShaosilGaming.GeneralImprovements", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("mattymatty.MattyFixes", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("Toybox.LittleCompany", BepInDependency.DependencyFlags.SoftDependency)]
@@ -20,7 +20,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.3.0";
+        const string VERSION = "1.4.0";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -32,12 +32,17 @@ namespace SelfSortingStorage
 
         void HarmonyPatchAll()
         {
-            harmony.CreateClassProcessor(typeof(GameNetworkManagerPatch), true).Patch();
+            if (Compatibility.DawnLibInstalled)
+                harmony.CreateClassProcessor(typeof(SavingPatchDawnLib), true).Patch();
+            else
+                harmony.CreateClassProcessor(typeof(SavingPatchVanilla), true).Patch();
+
             harmony.CreateClassProcessor(typeof(StartOfRoundPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(RoundManagerPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(BeltBagItemPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(MenuManagerPatch), true).Patch();
-            if (config.LittleCompanyInstalled)
+
+            if (Compatibility.LittleCompanyInstalled)
                 harmony.CreateClassProcessor(typeof(ShipBuildModeManagerLittleCompanyPatch), true).Patch();
             else
                 harmony.CreateClassProcessor(typeof(ShipBuildModeManagerPatch), true).Patch();
@@ -64,22 +69,27 @@ namespace SelfSortingStorage
             AssetBundle bundle = AssetBundle.LoadFromFile(assetDir);
 
             string directory = "Assets/Data/_Misc/";
-            var sssUnlockable = bundle.LoadAsset<UnlockableItemDef>(directory + "SSS_Module/SSSModuleUnlockable.asset");
+            var sssUnlockable = bundle.LoadAsset<UnlockablesList>(directory + "SSS_Module/SSSModuleUnlockableList.asset").unlockables[0];
 
             config = new Config(Config);
             config.SetupCustomConfigs();
             Effects.SetupNetwork();
 
+            if (!Compatibility.LethalLibInstalled && !Compatibility.DawnLibInstalled)
+            {
+                throw new FileNotFoundException("SelfSortingStorage could not be loaded due to a missing dependency.");
+            }
+
             if (config.wideVersion.Value)
             {
                 var widePrefab = bundle.LoadAsset<GameObject>(directory + "SSS_Module/SSS_Module_WideVariant.prefab");
-                sssUnlockable.unlockable.prefabObject = widePrefab;
+                sssUnlockable.prefabObject = widePrefab;
                 ROWS_LENGTH = 7;
             }
 
-            var sssPrefab = sssUnlockable.unlockable.prefabObject;
-            ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor);
-            sssPrefab.GetComponent<MeshRenderer>().materials[0].color = customColor;
+            var sssPrefab = sssUnlockable.prefabObject;
+            if (ColorUtility.TryParseHtmlString(config.cupboardColor.Value, out var customColor))
+                sssPrefab.GetComponent<MeshRenderer>().materials[0].color = customColor;
             if (!config.scanNode.Value)
             {
                 var scanNode = sssPrefab.transform.Find("ChutePosition/ActualPos/ScanNode");
@@ -108,9 +118,14 @@ namespace SelfSortingStorage
                 }
             }
 
-            NetworkPrefabs.RegisterNetworkPrefab(sssPrefab);
-            Utilities.FixMixerGroups(sssPrefab);
-            Unlockables.RegisterUnlockable(sssUnlockable, config.cupboardPrice.Value, StoreType.ShipUpgrade);
+            if (Compatibility.DawnLibInstalled)
+            {
+                Effects.DawnLibRegisterSSS(sssUnlockable);
+            }
+            else if (Compatibility.LethalLibInstalled)
+            {
+                Effects.LethalLibRegisterSSS(sssUnlockable);
+            }
 
             HarmonyPatchAll();
             logger.LogInfo("SelfSortingStorage is loaded !");
