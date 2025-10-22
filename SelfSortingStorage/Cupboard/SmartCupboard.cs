@@ -168,7 +168,10 @@ namespace SelfSortingStorage.Cupboard
             {
                 var item = Effects.GetItem(permanent.Item1);
                 if (item == null || item.spawnPrefab == null)
+                {
+                    Plugin.logger.LogError("The " + permanent.Item1 + " is not a valid item. Have you entered the item name correctly ?");
                     continue;
+                }
                 var grabbableObject = item.spawnPrefab.GetComponent<GrabbableObject>();
                 if (grabbableObject == null)
                     continue;
