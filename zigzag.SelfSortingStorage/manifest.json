@@ -4,7 +4,7 @@
     "website_url": "https://github.com/ZigzagAwaka/SelfSortingStorage",
     "description": "Adds the SSS, a special storage container to the shop that automatically sorts equipment items (scraps are also supported).",
     "dependencies": [
-        "TeamXiaolan-DawnLib-0.3.9",
+        "TeamXiaolan-DawnLib-0.3.10",
         "Evaisa-FixPluginTypesSerialization-1.1.4",
         "BepInEx-BepInExPack-5.4.2100"
     ]
