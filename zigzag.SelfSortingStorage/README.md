@@ -8,7 +8,7 @@ The Smart Cupboard can be acquired by spending 20 credits in the store.
 
 Compatible with v73 of Lethal Company.
 
-> **This mod requires [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed to avoid some item placement issues. [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) can also be installed to improve item rotations.** For more info, check the compatibility notes below.
+> **This mod requires [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) installed to avoid some item placement issues. However it is completely possible to not have it installed and instead rely on [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/) and [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) if wanted. [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) can also be installed to improve item rotations.** For more info, check the compatibility notes below.
 
 ##
 
@@ -64,24 +64,29 @@ List every stored items on a GeneralImprovements screen.
 ##
 
 ### Compatibility notes
+- **Used modding library**
+    - This mod is best to be used with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) as **it will save items positions and rotations** by default.
+    - However, you can safely remove DawnLib if you want and install [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/) instead but items positions will not be saved anymore and so you'll need to install another mod as stated just below.
 - **Required item fixing mods**
-    - This mod requires the support of an item fixing mod in order to avoid item placement issues. You have multiple mods that can work but the most effective ones are [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) and [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/).
-    - **Matty_Fixes is used to prevent items from falling through the shelves, and GeneralImprovements is used to correctly save items rotations.**
-    - It is recommended to have at least Matty_Fixes installed before using SelfSortingStorage. However, other similar mods may also work.
+    - If [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) is installed with the `Item Saving` config set to false (so the system is enabled) then you are good to go and you don't need anything else.
+    - If not, then this mod will require the support of an item fixing mod in order to avoid item placement issues. You have multiple mods that can work but the most effective ones are [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) and [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/).
+    - **Matty_Fixes will be used to prevent items from falling through the shelves, and GeneralImprovements will be used to correctly save items rotations.**
+    - If you are in this case, then it is recommended to have at least Matty_Fixes installed before using SelfSortingStorage. However, other similar mods may also work.
 - **Matty_Fixes**
     - If you have [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) installed, you need to have `OutOfBounds.Enabled` config enabled *(which is enabled by default)*.
     - **If you have both GeneralImprovements and Matty_Fixes installed**, then you'll need to disable either `FixItemsFallingThrough` in GeneralImprovements OR disable `OutOfBounds.Enabled` in Matty_Fixes, because these mods do the same thing.
 - **GeneralImprovements**
-    - If you have [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) installed, you need to have `FixItemsLoadingSameRotation` AND `FixItemsFallingThrough` configs enabled. This is needed for items to face the correct direction when stored and when loaded.
-    - The `ShipPlaceablesCollide` config also needs to be enabled to avoid items vanishing when stored.
+    - If you have [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) installed, you need to have `FixItemsLoadingSameRotation` AND `FixItemsFallingThrough` configs enabled ; this is needed for items to face the correct direction when stored and when loaded (this is NOT needed if [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) is also installed).
+    - The `ShipPlaceablesCollide` config also needs to be enabled to avoid items vanishing when stored (this is needed all the time).
     - *All of these configs are enabled by default if you haven't change the config file.*
 - **Problems buying the Smart Cupboard in the store**
     - This is a common issue for similarly named terminal objects, try deleting the save or installing [TerminalConflictFix](https://thunderstore.io/c/lethal-company/p/SylviBlossom/TerminalConflictFix/) to fix this.
     - Another alternative solution is to use [DarmuhsTerminalStuff](https://thunderstore.io/c/lethal-company/p/darmuh/darmuhsTerminalStuff/) like this user suggested [here on github](https://github.com/ZigzagAwaka/SelfSortingStorage/issues/2#issuecomment-2708783243).
 - **CruiserImproved and custom ships**
-    - If you have a custom ship mod AND [CruiserImproved](https://thunderstore.io/c/lethal-company/p/DiggC/CruiserImproved/) installed, reloading a save when the SSS is already unlocked will break it until a complete reset. Please wait for CruiserImproved to be updated to support custom ships.
-- **Forced moving items mods**
+    - If you have a custom ship mod AND [CruiserImproved](https://thunderstore.io/c/lethal-company/p/DiggC/CruiserImproved/) installed, reloading a save when the SSS is already unlocked may break it until a complete reset. Please wait for CruiserImproved to be updated to support custom ships.
+- **About forced moving items mods and scraps keeping mods**
     - Mods that can force move items such as SellMyScrap when selling at the Company are not compatible (can be probably tweaked to avoid issues).
+    - Mods that changes how the scraps are kept on a team wipe or a game over are NOT compatible. The only one that is compatible is the "Selective scrap keeping" feature in [ScienceBird_Tweaks](https://thunderstore.io/c/lethal-company/p/ScienceBird/ScienceBird_Tweaks/).
 - **TerminalFormatter item listing**
     - If you want stored items to be listed in the "owned" section of the shop when using [TerminalFormatter](https://thunderstore.io/c/lethal-company/p/mrov/TerminalFormatter/), then you'll need to install [ScienceBird_Tweaks](https://thunderstore.io/c/lethal-company/p/ScienceBird/ScienceBird_Tweaks/) !
 
@@ -119,7 +124,9 @@ If you want to suggest new features or contact me please go to the mod release p
 
 - Thanks [Xu Xiaolan](https://www.youtube.com/shorts/Kt5mnWK-rgI) for helping with some parts of the code, and also for suggesting good things!
 
-- Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial idea and for testing!
+- Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial mod idea and for testing!
+
+- Thanks [Matty](https://thunderstore.io/c/lethal-company/p/mattymatty/) for helping with Matty_Fixes compatibility and other general suggestions.
 
 - Thanks [ScienceBird](https://thunderstore.io/c/lethal-company/p/ScienceBird/) for the help concerning furnitures parenting!
 
