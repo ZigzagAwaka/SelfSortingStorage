@@ -31,25 +31,6 @@ namespace SelfSortingStorage.Utils
     }
 
 
-    [HarmonyPatch]
-    internal class SavingPatchDawnLib
-    {
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Dawn.Internal.SaveDataPatch), "SaveData", new System.Type[] { typeof(On.GameNetworkManager.orig_SaveItemsInShip), typeof(GameNetworkManager) })]
-        public static void SaveSmartCupboard()
-        {
-            SavingPatchVanilla.SaveSmartCupboard();
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Dawn.Internal.SaveDataPatch), "LoadShipGrabbableItems", new System.Type[] { typeof(On.StartOfRound.orig_LoadShipGrabbableItems), typeof(StartOfRound) })]
-        public static void LoadSmartCupboard()
-        {
-            SavingPatchVanilla.LoadSmartCupboard();
-        }
-    }
-
-
     [HarmonyPatch(typeof(StartOfRound))]
     internal class StartOfRoundPatch
     {

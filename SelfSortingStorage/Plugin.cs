@@ -20,7 +20,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.4.0";
+        const string VERSION = "1.4.1";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -32,10 +32,7 @@ namespace SelfSortingStorage
 
         void HarmonyPatchAll()
         {
-            if (Compatibility.DawnLibInstalled)
-                harmony.CreateClassProcessor(typeof(SavingPatchDawnLib), true).Patch();
-            else
-                harmony.CreateClassProcessor(typeof(SavingPatchVanilla), true).Patch();
+            harmony.CreateClassProcessor(typeof(SavingPatchVanilla), true).Patch();
 
             harmony.CreateClassProcessor(typeof(StartOfRoundPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(RoundManagerPatch), true).Patch();
