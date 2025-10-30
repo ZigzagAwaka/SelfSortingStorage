@@ -125,10 +125,10 @@ namespace SelfSortingStorage.Cupboard
         public void InitializeCache()
         {
             Instance = this;
-            if (Compatibility.LethalLibInstalled)
-                Effects.FillUpCacheFromLethalLib(CacheItems);
-            else if (Compatibility.DawnLibInstalled)
+            if (Compatibility.DawnLibInstalled)
                 Effects.FillUpCacheFromDawnLib(CacheItems);
+            else if (Compatibility.LethalLibInstalled)
+                Effects.FillUpCacheFromLethalLib(CacheItems);
         }
 
         public bool StoreData(Data data, out int spawnIndex, bool freeSpaceOnly = false)

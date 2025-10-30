@@ -1,3 +1,6 @@
+## 1.4.2
+- Loading of modded items into the cache will now use [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) in priority if it is installed, and [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/) if it is not installed
+
 ## 1.4.1
 - Fixed compatibility with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) 0.3.11+
 
