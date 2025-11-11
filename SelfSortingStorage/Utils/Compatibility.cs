@@ -57,6 +57,10 @@ namespace SelfSortingStorage.Utils
                 compatibilityValid = false;
                 errorID = 6002;
             }
+            else if (DawnLibInstalled && !Effects.GetConfigDL(0))
+            {
+                return true;  // if DawnLib is installed and the config is set to false, no need to check further
+            }
             else if (!GeneralImprovementsInstalled && MattyFixesInstalled && !Effects.GetConfigMF(0))
             {
                 Plugin.logger.LogError("OutOfBounds.Enabled config in MattyFixes needs to be enabled !");

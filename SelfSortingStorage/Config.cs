@@ -9,23 +9,30 @@ namespace SelfSortingStorage
     {
         public readonly Dictionary<int, int> rowsOrder = new Dictionary<int, int>();
         public readonly List<string> itemsBlacklist = new List<string>();
+        public readonly List<string> scrapsWhitelist = new List<string>();
         public readonly List<(string, int)> permanentItems = new List<(string, int)>();
 
         public readonly ConfigEntry<bool> enableSaving;
         public readonly ConfigEntry<bool> allowScrapItems;
         public readonly ConfigEntry<bool> scanNode;
         public readonly ConfigEntry<string> cupboardColor;
+
         public readonly ConfigEntry<string> boxPosition;
         public readonly ConfigEntry<bool> rescaleItems;
         public readonly ConfigEntry<bool> perfectRescale;
         public readonly ConfigEntry<string> rowsOrderStr;
         public readonly ConfigEntry<string> blacklistStr;
+        public readonly ConfigEntry<string> whitelistStr;
+
         public readonly ConfigEntry<int> cupboardPrice;
+
         public readonly ConfigEntry<string> permanentStr;
+
         public readonly ConfigEntry<bool> wideVersion;
         public readonly ConfigEntry<bool> cozyLights;
         public readonly ConfigEntry<bool> resetButton;
         public readonly ConfigEntry<int> customScreenPos;
+
         public readonly ConfigEntry<bool> verboseLogging;
 
         public Config(ConfigFile cfg)
@@ -42,6 +49,7 @@ namespace SelfSortingStorage
             perfectRescale = cfg.Bind("Storage", "Perfect rescale", true, "Change the rescale algorithm to have items perfectly rescaled when stored (based on their collider max size).");
             rowsOrderStr = cfg.Bind("Storage", "Rows order", "1,2,3,4", "Specify the order of items placement in the storage. Each number represents a shelve of the storage from top to bottom and the first one to be filled will be the number '1'.\nExample: Having an order of '1,2,3,4' will fill items from top to bottom, and having '3,1,2,4' will fill the middle shelves first.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening (or press the Reset Button).");
             blacklistStr = cfg.Bind("Storage", "Items Blacklist", "clipboard,Sticky note,Utility Belt", "Comma separated list of items names that will be rejected from the storage.");
+            whitelistStr = cfg.Bind("Storage", "Scraps Whitelist", "", "Comma separated list of scrap items names that will be accepted by the storage when 'Allow Scrap items' is disabled.\nThis can be used to force allow specific scraps in the storage while every other scraps are not accepeted when 'Allow Scrap items' is false.");
 
             cupboardPrice = cfg.Bind("Shop", "Price", 20, "The price of the Smart Cupboard in the store.");
 
@@ -71,6 +79,14 @@ namespace SelfSortingStorage
                 }
                 if (itemsBlacklist.Count != 0)
                     RegisterBlacklist();
+            }
+
+            if (!allowScrapItems.Value && !string.IsNullOrEmpty(whitelistStr.Value))
+            {
+                foreach (string itemStr in whitelistStr.Value.Split(',').Select(s => s.Trim()))
+                {
+                    scrapsWhitelist.Add(itemStr);
+                }
             }
 
             if (!string.IsNullOrEmpty(permanentStr.Value))
@@ -126,6 +142,15 @@ namespace SelfSortingStorage
             if (itemsBlacklist.Exists((i) => i == item.itemProperties.itemName))
                 return false;
             return true;
+        }
+
+        internal bool IsScrapForcedWhitelisted(string itemName)
+        {
+            if (allowScrapItems.Value)
+                return true;
+            if (scrapsWhitelist.Count == 0)
+                return false;
+            return scrapsWhitelist.Contains(itemName);
         }
     }
 }

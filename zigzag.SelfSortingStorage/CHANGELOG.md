@@ -1,3 +1,8 @@
+## 1.4.3
+- Added `Scraps Whitelist` config, this can be used to force allow specific scraps in the storage when `Allow Scrap items` is disabled
+- Updated in-game error messages display to skip some checks if [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) is installed and correctly configured
+- Added *something special* for December
+
 ## 1.4.2
 - Loading of modded items into the cache will now use [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) in priority if it is installed, and [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/) if it is not installed
 

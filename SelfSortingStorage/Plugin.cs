@@ -20,7 +20,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.4.2";
+        const string VERSION = "1.4.3";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -33,7 +33,6 @@ namespace SelfSortingStorage
         void HarmonyPatchAll()
         {
             harmony.CreateClassProcessor(typeof(SavingPatchVanilla), true).Patch();
-
             harmony.CreateClassProcessor(typeof(StartOfRoundPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(RoundManagerPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(BeltBagItemPatch), true).Patch();
@@ -113,6 +112,11 @@ namespace SelfSortingStorage
                 {
                     ReplaceTransform(sssPrefab, "Lights/LightsButtonPosition/ActualPos", "Lights/LightsButtonPosition/Pos2");
                 }
+            }
+            if (System.DateTime.Today.Month == 12)  // December reskin
+            {
+                var christmas = sssPrefab.transform.Find("Christmas");
+                christmas?.gameObject.SetActive(true);
             }
 
             if (Compatibility.DawnLibInstalled)

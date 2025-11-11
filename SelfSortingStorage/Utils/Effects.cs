@@ -164,12 +164,12 @@ namespace SelfSortingStorage.Utils
                     notValidText = "[Exploded grenades are illegal]";
                     return false;
                 }
-                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Belt bag")
+                if (player.currentlyHeldObjectServer.itemProperties.itemName == "Belt bag")  // todo: add compatibility with Belt Bags
                 {
                     notValidText = "[Belt bags not compatible]";
                     return false;
                 }
-                if (!Plugin.config.allowScrapItems.Value && player.currentlyHeldObjectServer.itemProperties.isScrap)
+                if (!Plugin.config.allowScrapItems.Value && player.currentlyHeldObjectServer.itemProperties.isScrap && !Plugin.config.IsScrapForcedWhitelisted(player.currentlyHeldObjectServer.itemProperties.itemName))
                 {
                     notValidText = "[Scraps not allowed]";
                     return false;
