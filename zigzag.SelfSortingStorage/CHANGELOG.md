@@ -1,3 +1,8 @@
+## 1.4.4
+- Added the `Quantity Cursortip` misc config feature: when enabled, will show the quantity of the item stack on the cursortip UI when hovering an item stored in the SSS
+- Added [AutoHookGenPatcher](https://thunderstore.io/c/lethal-company/p/Hamunii/AutoHookGenPatcher/) as a dependency
+- Added a check to prevent invalid [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) screens from being set by the `SSS Screen position` config
+
 ## 1.4.3
 - Added `Scraps Whitelist` config, this can be used to force allow specific scraps in the storage when `Allow Scrap items` is disabled
 - Updated in-game error messages display to skip some checks if [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) is installed and correctly configured

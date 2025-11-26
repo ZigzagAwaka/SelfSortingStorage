@@ -30,32 +30,32 @@ The storage will then sort these tools and put them on display in specific secti
 ### Other features
 - All items stored in the Smart Cupboard are saved in the host player's current save file.
 - If you dump a big item in the box, it will be rescaled to fit nicely in the storage!
-- You can customize a lot of things in the config file (such as the price and the color of the cupboard).
+- You can customize a lot of things in the config file (such as the price and the color of the cupboard, or even displaying the quantity of items on the cursor UI).
 - Some **optional upgrades** can be activated in the configs.
 
-<details><summary>Preview images of the upgrades (click to reveal)</summary>
+**<details><summary>Preview images of the upgrades (click to reveal)</summary>**
 
-#### Wide Cupboard
+### Wide Cupboard
 
 For those who wants more space!
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades1.PNG)
 
-#### Reset Button
+### Reset Button
 
-Press it to delete everything stored...
+Press it to delete everything stored... and reset the Cupboard's memory.
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades2.PNG)
 
-#### Cozy Lights
+### Cozy Lights
 
-Some decorative lights for the storage!
+Some decorative lights for the storage! (with a button!)
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades3.PNG)
 
-#### Items list screen
+### Items list screen
 
-List every stored items on a GeneralImprovements screen.
+List every stored items on a [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) screen (cycles through all shelves).
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades4.png)
 
@@ -126,7 +126,7 @@ If you want to suggest new features or contact me please go to the mod release p
 
 - Thanks [A Glitched Npc](https://www.twitch.tv/a_glitched_npc) for the initial mod idea and for testing!
 
-- Thanks [Matty](https://thunderstore.io/c/lethal-company/p/mattymatty/) for helping with Matty_Fixes compatibility and other general suggestions.
+- Thanks [Matty](https://thunderstore.io/c/lethal-company/p/mattymatty/) for helping with [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/)  compatibility and other general suggestions.
 
 - Thanks [ScienceBird](https://thunderstore.io/c/lethal-company/p/ScienceBird/) for the help concerning furnitures parenting!
 

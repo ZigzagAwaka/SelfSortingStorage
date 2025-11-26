@@ -126,7 +126,7 @@ namespace SelfSortingStorage.Utils
 
         public static void SetScreenText(int screenID, string text)
         {
-            GeneralImprovements.API.MonitorsAPI.GetMonitorAtIndex(screenID).QueueRender(text);
+            GeneralImprovements.API.MonitorsAPI.GetMonitorAtIndex(screenID)?.QueueRender(text);
         }
 
         public static IEnumerator FadeOutAudio(AudioSource source, float time, bool specialStop = false)

@@ -46,6 +46,12 @@
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>..\..\_utils\Librairies\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\_utils\Librairies\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>..\..\_utils\Librairies\MonoMod.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\_utils\Librairies\Newtonsoft.Json.dll</HintPath>
     </Reference>

@@ -27,6 +27,7 @@ namespace SelfSortingStorage
         public readonly ConfigEntry<int> cupboardPrice;
 
         public readonly ConfigEntry<string> permanentStr;
+        public readonly ConfigEntry<bool> quantityCursortipActive;
 
         public readonly ConfigEntry<bool> wideVersion;
         public readonly ConfigEntry<bool> cozyLights;
@@ -54,6 +55,7 @@ namespace SelfSortingStorage
             cupboardPrice = cfg.Bind("Shop", "Price", 20, "The price of the Smart Cupboard in the store.");
 
             permanentStr = cfg.Bind("Misc", "Permanent items", "", "Comma separated list of items that will be permanently stored in the SSS, you can optionally provide a quantity if wanted (if not it will default to 10000).\nThe accepted format for an item is 'origin/name/quantity' where 'name' is the name of the item and 'origin' is the mod's name that contains this item (write 'LethalCompanyGame' for a vanilla item).\nThis LethalCompanyGame/Walkie-talkie,premiumscraps/The talking orb,LethalCompanyGame/Pro-flashlight/10,code_rebirth/Wayfarer's Wallet/4 is a valid example.\nPLEASE NOTE that without DawnLib installed the mod will instead use LethalLib for the mod's names and that can result in different strings, for example 'comgithubbiodiversitylcbiodiversity' will become 'com.github.biodiversitylc.Biodiversity'.");
+            quantityCursortipActive = cfg.Bind("Misc", "Quantity Cursortip", false, "When true, shows the quantity of the item stack on the cursortip UI when hovering an item stored in the Smart Cupboard.");
 
             wideVersion = cfg.Bind("Upgrades", "Wide Cupboard", false, "Activate the S4 upgrade, turns the Smart Cupboard into a wider version.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening (or press the Reset Button).");
             cozyLights = cfg.Bind("Upgrades", "Cozy Lights", true, "Activate the cozy lights upgrade, adds some lights on the shelves and a button to turn them on and off.");

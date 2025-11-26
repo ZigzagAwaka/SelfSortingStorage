@@ -19,7 +19,9 @@ namespace SelfSortingStorage.Cupboard
         private GrabbableObject? awaitingObject = null;
         private bool responseOnAwaiting = false;
         private bool isRespawningFromSave = false;
+
         public static bool SpawnedInShip { get; private set; } = false;
+        public static Dictionary<ulong, int> StoredInstanceQuantities { get; } = new Dictionary<ulong, int>();
 
         public SmartCupboard() { }
 
@@ -50,6 +52,7 @@ namespace SelfSortingStorage.Cupboard
         {
             base.OnNetworkDespawn();
             SpawnedInShip = false;
+            StoredInstanceQuantities.Clear();
         }
 
         private void PreparePlacePositions()
@@ -103,6 +106,8 @@ namespace SelfSortingStorage.Cupboard
                     {
                         if (Plugin.config.rescaleItems.Value)
                             ScaleItemClientRpc(item.gameObject.GetComponent<NetworkObject>(), false);
+                        if (Plugin.config.quantityCursortipActive.Value)
+                            UpdateNetworkQuantityClientRpc(item.NetworkObjectId, shouldRemove: true);
                         var itemData = memory.RetrieveData(spawnIndex);
                         if (!memory.IsFull())
                             SetSizeClientRpc(memory.Size);
@@ -148,6 +153,8 @@ namespace SelfSortingStorage.Cupboard
                                 Effects.ReParentItemToCupboard(array[i], this, spawnIndex);
                                 if (Plugin.config.rescaleItems.Value)
                                     Effects.RescaleItemIfTooBig(array[i]);
+                                if (Plugin.config.quantityCursortipActive.Value)
+                                    StoredInstanceQuantities.Add(array[i].NetworkObjectId, item.Quantity);
                                 placedItems[spawnIndex] = array[i];
                             }
                         }
@@ -220,7 +227,11 @@ namespace SelfSortingStorage.Cupboard
             else
             {
                 if (placedItems.TryGetValue(spawnIndex, out var component))
+                {
                     PlayDropSFXClientRpc(component.gameObject.GetComponent<NetworkObject>());
+                    if (Plugin.config.quantityCursortipActive.Value)
+                        UpdateNetworkQuantityClientRpc(component.NetworkObjectId);
+                }
             }
             if (Plugin.config.verboseLogging.Value)
                 Plugin.logger.LogWarning(memory.ToString());
@@ -234,17 +245,17 @@ namespace SelfSortingStorage.Cupboard
             if (item != null)
             {
                 var itemRef = Effects.SpawnItem(item, this, spawnIndex, itemData.Values[0], itemData.Saves[0]);
-                SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, itemRef.save, spawnIndex, isStacked);
+                SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, itemRef.save, itemData.Quantity, spawnIndex, isStacked);
             }
         }
 
         [ClientRpc]
-        private void SyncItemClientRpc(NetworkObjectReference itemRef, int value, int save, int spawnIndex, bool isStacked)
+        private void SyncItemClientRpc(NetworkObjectReference itemRef, int value, int save, int quantity, int spawnIndex, bool isStacked)
         {
-            StartCoroutine(SyncItem(itemRef, value, save, spawnIndex, isStacked));
+            StartCoroutine(SyncItem(itemRef, value, save, quantity, spawnIndex, isStacked));
         }
 
-        private IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save, int spawnIndex, bool isStacked)
+        private IEnumerator SyncItem(NetworkObjectReference itemRef, int value, int save, int quantity, int spawnIndex, bool isStacked)
         {
             yield return Effects.SyncItem(itemRef, this, spawnIndex, value, save);
             if (itemRef.TryGet(out var itemNetObject))
@@ -252,6 +263,8 @@ namespace SelfSortingStorage.Cupboard
                 var component = itemNetObject.GetComponent<GrabbableObject>();
                 if (!isStacked)
                     component.PlayDropSFX();
+                if (Plugin.config.quantityCursortipActive.Value)
+                    StoredInstanceQuantities.Add(component.NetworkObjectId, quantity);
                 if (IsServer)
                 {
                     placedItems[spawnIndex] = component;
@@ -308,6 +321,27 @@ namespace SelfSortingStorage.Cupboard
                     Effects.ScaleBackItem(itemNetObject.GetComponent<GrabbableObject>());
                 }
             }
+        }
+
+        [ClientRpc]
+        private void UpdateNetworkQuantityClientRpc(ulong networkIdToRemove, bool shouldRemove = false)
+        {
+            if (Plugin.config.quantityCursortipActive.Value && StoredInstanceQuantities.ContainsKey(networkIdToRemove))
+            {
+                if (shouldRemove)
+                    StoredInstanceQuantities.Remove(networkIdToRemove);
+                else
+                    StoredInstanceQuantities[networkIdToRemove]++;
+            }
+        }
+
+        private IEnumerator SyncNetworkQuantity(NetworkObjectReference itemRef, int quantity)
+        {
+            NetworkObject? itemNetObject;
+            while (!itemRef.TryGet(out itemNetObject))
+                yield return new WaitForSeconds(0.03f);
+            var component = itemNetObject.GetComponent<GrabbableObject>();
+            StoredInstanceQuantities.Add(component.NetworkObjectId, quantity);
         }
 
         private bool CheckIsFull(PlayerControllerB player)
@@ -385,17 +419,26 @@ namespace SelfSortingStorage.Cupboard
             {
                 if (!item.isHeld && !item.isHeldByEnemy)
                 {
+                    int quantity;
+                    if (Plugin.config.quantityCursortipActive.Value && StoredInstanceQuantities.TryGetValue(item.NetworkObjectId, out var storedQuantity))
+                        quantity = storedQuantity;
+                    else
+                        quantity = 1;
                     Vector3 syncedPosition = item.targetFloorPosition;
                     Quaternion syncedRotation = item.transform.localRotation;
-                    SyncClientRpc(item.gameObject.GetComponent<NetworkObject>(), spawnIndex, item.originalScale, syncedPosition, syncedRotation, clientRpcParams);
+                    SyncClientRpc(item.gameObject.GetComponent<NetworkObject>(), quantity, spawnIndex, item.originalScale, syncedPosition, syncedRotation, clientRpcParams);
                 }
             }
         }
 
         [ClientRpc]
-        private void SyncClientRpc(NetworkObjectReference itemRef, int spawnIndex, Vector3 originalScale, Vector3 syncedPos, Quaternion syncedRot, ClientRpcParams clientRpcParams = default)
+        private void SyncClientRpc(NetworkObjectReference itemRef, int quantity, int spawnIndex, Vector3 originalScale, Vector3 syncedPos, Quaternion syncedRot, ClientRpcParams clientRpcParams = default)
         {
             StartCoroutine(ScaleItem(itemRef, true, originalScale, true, spawnIndex, syncedPos, syncedRot));
+            if (Plugin.config.quantityCursortipActive.Value)
+            {
+                StartCoroutine(SyncNetworkQuantity(itemRef, quantity));
+            }
         }
 
         [ClientRpc]
