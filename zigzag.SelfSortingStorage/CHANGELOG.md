@@ -1,5 +1,5 @@
 ## 1.4.4
-- Added the `Quantity Cursortip` misc config feature: when enabled, will show the quantity of the item stack on the cursortip UI when hovering an item stored in the SSS
+- Added the `Quantity Cursortip` upgrade that can be activated in the config: will show the quantity of the item stack on the cursortip UI when hovering an item stored in the SSS
 - Added [AutoHookGenPatcher](https://thunderstore.io/c/lethal-company/p/Hamunii/AutoHookGenPatcher/) as a dependency
 - Added a check to prevent invalid [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) screens from being set by the `SSS Screen position` config
 

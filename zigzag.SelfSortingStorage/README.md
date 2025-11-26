@@ -59,6 +59,13 @@ List every stored items on a [GeneralImprovements](https://thunderstore.io/c/let
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades4.png)
 
+### Quantity display
+
+Show the quantity of the item stack on the cursortip UI when hovering a stored item.
+
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades5.PNG)
+
+
 </details>
 
 ##
