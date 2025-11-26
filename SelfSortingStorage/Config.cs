@@ -27,12 +27,12 @@ namespace SelfSortingStorage
         public readonly ConfigEntry<int> cupboardPrice;
 
         public readonly ConfigEntry<string> permanentStr;
-        public readonly ConfigEntry<bool> quantityCursortipActive;
 
         public readonly ConfigEntry<bool> wideVersion;
         public readonly ConfigEntry<bool> cozyLights;
         public readonly ConfigEntry<bool> resetButton;
         public readonly ConfigEntry<int> customScreenPos;
+        public readonly ConfigEntry<bool> quantityCursortipActive;
 
         public readonly ConfigEntry<bool> verboseLogging;
 
@@ -55,12 +55,12 @@ namespace SelfSortingStorage
             cupboardPrice = cfg.Bind("Shop", "Price", 20, "The price of the Smart Cupboard in the store.");
 
             permanentStr = cfg.Bind("Misc", "Permanent items", "", "Comma separated list of items that will be permanently stored in the SSS, you can optionally provide a quantity if wanted (if not it will default to 10000).\nThe accepted format for an item is 'origin/name/quantity' where 'name' is the name of the item and 'origin' is the mod's name that contains this item (write 'LethalCompanyGame' for a vanilla item).\nThis LethalCompanyGame/Walkie-talkie,premiumscraps/The talking orb,LethalCompanyGame/Pro-flashlight/10,code_rebirth/Wayfarer's Wallet/4 is a valid example.\nPLEASE NOTE that without DawnLib installed the mod will instead use LethalLib for the mod's names and that can result in different strings, for example 'comgithubbiodiversitylcbiodiversity' will become 'com.github.biodiversitylc.Biodiversity'.");
-            quantityCursortipActive = cfg.Bind("Misc", "Quantity Cursortip", false, "When true, shows the quantity of the item stack on the cursortip UI when hovering an item stored in the Smart Cupboard.");
 
             wideVersion = cfg.Bind("Upgrades", "Wide Cupboard", false, "Activate the S4 upgrade, turns the Smart Cupboard into a wider version.\nDON'T CHANGE THIS CONFIG WHEN THE SSS IS ALREADY UNLOCKED, a fresh save is required to avoid bad things happening (or press the Reset Button).");
             cozyLights = cfg.Bind("Upgrades", "Cozy Lights", true, "Activate the cozy lights upgrade, adds some lights on the shelves and a button to turn them on and off.");
             resetButton = cfg.Bind("Upgrades", "Reset Button", false, "Activate the soft reset upgrade, adds the 'button of death' on the side of the storage that you can press to clear every stored items in the SSS.\nPressing this button will effectively destroy everything so you shouldn't have the need to activate this unless you really want a way to reset the storage without being fired.");
             customScreenPos = cfg.Bind("Upgrades", "SSS Screen position", 0, "If GeneralImprovements is installed and this value is not 0, then this mod will display SSS items on the desired screen. In GI config you need to set 'UseBetterMonitors = true', then set to 'None' the screen that will display the SSS items, then provide the screen position here to make it work.");
+            quantityCursortipActive = cfg.Bind("Upgrades", "Quantity Cursortip", false, "When true, shows the quantity of the item stack on the cursortip UI when hovering an item stored in the Smart Cupboard.");
 
             verboseLogging = cfg.Bind("Logs", "Verbose logs", false, "Enable more explicit logs in the console (for debug reasons).");
 

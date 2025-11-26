@@ -419,11 +419,11 @@ namespace SelfSortingStorage.Cupboard
             {
                 if (!item.isHeld && !item.isHeldByEnemy)
                 {
-                    int quantity;
+                    int quantity = 1;
                     if (Plugin.config.quantityCursortipActive.Value && StoredInstanceQuantities.TryGetValue(item.NetworkObjectId, out var storedQuantity))
+                    {
                         quantity = storedQuantity;
-                    else
-                        quantity = 1;
+                    }
                     Vector3 syncedPosition = item.targetFloorPosition;
                     Quaternion syncedRotation = item.transform.localRotation;
                     SyncClientRpc(item.gameObject.GetComponent<NetworkObject>(), quantity, spawnIndex, item.originalScale, syncedPosition, syncedRotation, clientRpcParams);
