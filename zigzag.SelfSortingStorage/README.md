@@ -30,7 +30,7 @@ The storage will then sort these tools and put them on display in specific secti
 ### Other features
 - All items stored in the Smart Cupboard are saved in the host player's current save file.
 - If you dump a big item in the box, it will be rescaled to fit nicely in the storage!
-- You can customize a lot of things in the config file (such as the price and the color of the cupboard, or even displaying the quantity of items on the cursor UI).
+- You can customize a lot of things in the config file (such as the price and the color of the cupboard).
 - Some **optional upgrades** can be activated in the configs.
 
 **<details><summary>Preview images of the upgrades (click to reveal)</summary>**
