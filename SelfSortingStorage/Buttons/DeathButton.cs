@@ -26,7 +26,14 @@ namespace SelfSortingStorage.Buttons
             if (!Plugin.config.resetButton.Value)
                 return;
             if (!IsServer)
+            {
                 StartCoroutine(SyncButton());
+                if (Plugin.config.resetButtonHostOnly.Value)
+                {
+                    triggerScript.interactable = false;
+                    triggerScript.disabledHoverTip = "[Must be server host]";
+                }
+            }
         }
 
         public void Press(bool _)

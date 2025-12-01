@@ -1,3 +1,7 @@
+## 1.4.5
+- Added `Reset Button Host Only` misc config that can be used to make the `Reset Button` only usable by the host
+- Fixed christmas reskin having incorect wide stars for the `Wide Cupboard`
+
 ## 1.4.4
 - Added the `Quantity Cursortip` upgrade that can be activated in the config: will show the quantity of the item stack on the cursortip UI when hovering an item stored in the SSS
 - Added [AutoHookGenPatcher](https://thunderstore.io/c/lethal-company/p/Hamunii/AutoHookGenPatcher/) as a dependency
