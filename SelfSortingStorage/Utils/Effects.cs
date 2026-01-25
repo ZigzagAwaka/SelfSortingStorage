@@ -99,7 +99,7 @@ namespace SelfSortingStorage.Utils
         {
             return wantedConfigID switch
             {
-                0 => Dawn.Internal.DawnConfig.DisableDawnItemSaving,
+                0 => Dawn.Internal.DawnConfig.DisableDawnItemSaving.Value,
                 _ => false,
             };
         }

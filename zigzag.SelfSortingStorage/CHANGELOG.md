@@ -1,3 +1,6 @@
+## 1.4.6
+- Fixed compatibility with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) 0.7.3+
+
 ## 1.4.5
 - Added `Reset Button Host Only` misc config that can be used to make the `Reset Button` only usable by the host
 - Fixed christmas reskin having incorect wide stars for the `Wide Cupboard`
