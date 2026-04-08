@@ -38,6 +38,8 @@ namespace SelfSortingStorage
             harmony.CreateClassProcessor(typeof(BeltBagItemPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(MenuManagerPatch), true).Patch();
 
+            DestroyItemInSlotMonoPatch.Load();
+
             if (Compatibility.LittleCompanyInstalled)
                 harmony.CreateClassProcessor(typeof(ShipBuildModeManagerLittleCompanyPatch), true).Patch();
             else
