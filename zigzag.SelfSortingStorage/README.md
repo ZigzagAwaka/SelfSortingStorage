@@ -6,7 +6,7 @@ This storage container who looks a lot like the vanilla Cupboard furniture, has 
 
 The Smart Cupboard can be acquired by spending 20 credits in the store.
 
-Compatible with v73 of Lethal Company.
+Compatible with v81 of Lethal Company.
 
 > **This mod requires [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) installed to avoid some item placement issues. However it is completely possible to not have it installed and instead rely on [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/) and [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) if wanted. [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) can also be installed to improve item rotations.** For more info, check the compatibility notes below.
 

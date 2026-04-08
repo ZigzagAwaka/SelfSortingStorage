@@ -1,3 +1,6 @@
+## 1.5.0
+- Updated to now be compatible with v81 of the game
+
 ## 1.4.6
 - Fixed compatibility with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) 0.7.3+
 
