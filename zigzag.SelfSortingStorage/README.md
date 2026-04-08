@@ -43,7 +43,7 @@ For those who wants more space!
 
 ### Reset Button
 
-Press it to delete everything stored... and reset the Cupboard's memory.
+Press it to delete everything stored... and reset the Cupboard's memory (with an optional host only config).
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades2.PNG)
 
@@ -55,15 +55,21 @@ Some decorative lights for the storage! (with a button!)
 
 ### Items list screen
 
-List every stored items on a [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) screen (cycles through all shelves).
+List every stored items on a [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) screen (cycles through all shelves, refreshes every 10s).
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades4.png)
 
-### Quantity display
+### Quantity display (cursortip)
 
 Show the quantity of the item stack on the cursortip UI when hovering a stored item.
 
 ![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades5.PNG)
+
+### Quantity display (physical)
+
+Show the quantity of the item stack on a small "card" under the item position !
+
+![Preview](https://raw.githubusercontent.com/ZigzagAwaka/SelfSortingStorage/main/Images/SSS_Upgrades6.PNG)
 
 
 </details>
