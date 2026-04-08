@@ -1,5 +1,6 @@
 ## 1.5.0
 - Updated to now be compatible with v81 of the game
+- Added the `Quantity Display` upgrade that can be activated in the config: will show the current quantity of the item stack on a small "card" under the stored item position
 
 ## 1.4.6
 - Fixed compatibility with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) 0.7.3+

@@ -3,6 +3,7 @@ using SelfSortingStorage.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace SelfSortingStorage.Cupboard
         public NetworkObject parentObject;
         public InteractTrigger triggerScript;
         public Transform[] placePositions;
+        public TMP_Text[] quantitiesTexts;
         public SmartMemory memory = new SmartMemory();
         public readonly Dictionary<int, GrabbableObject> placedItems = new Dictionary<int, GrabbableObject>();
         private readonly List<int> indexToRemove = new List<int>();
@@ -116,6 +118,8 @@ namespace SelfSortingStorage.Cupboard
                         {
                             SpawnItem(itemData, spawnIndex, true);
                         }
+                        else if (Plugin.config.quantityDisplayActive.Value)
+                            UpdateDisplayedQuantityClientRpc(spawnIndex, quantity: 0);
                     }
                 }
                 if (indexToRemove.Count != 0)
@@ -155,6 +159,8 @@ namespace SelfSortingStorage.Cupboard
                                     Effects.RescaleItemIfTooBig(array[i]);
                                 if (Plugin.config.quantityCursortipActive.Value)
                                     StoredInstanceQuantities.Add(array[i].NetworkObjectId, item.Quantity);
+                                if (Plugin.config.quantityDisplayActive.Value)
+                                    UpdateDisplayedQuantity(spawnIndex, item.Quantity);
                                 placedItems[spawnIndex] = array[i];
                             }
                         }
@@ -231,6 +237,10 @@ namespace SelfSortingStorage.Cupboard
                     PlayDropSFXClientRpc(component.gameObject.GetComponent<NetworkObject>());
                     if (Plugin.config.quantityCursortipActive.Value)
                         UpdateNetworkQuantityClientRpc(component.NetworkObjectId);
+                    if (Plugin.config.quantityDisplayActive.Value && int.TryParse(quantitiesTexts[spawnIndex].text, out int storedQuantityDisplayed))
+                    {
+                        UpdateDisplayedQuantityClientRpc(spawnIndex, storedQuantityDisplayed + 1);
+                    }
                 }
             }
             if (Plugin.config.verboseLogging.Value)
@@ -265,6 +275,8 @@ namespace SelfSortingStorage.Cupboard
                     component.PlayDropSFX();
                 if (Plugin.config.quantityCursortipActive.Value)
                     StoredInstanceQuantities.Add(component.NetworkObjectId, quantity);
+                if (Plugin.config.quantityDisplayActive.Value)
+                    UpdateDisplayedQuantity(spawnIndex, quantity);
                 if (IsServer)
                 {
                     placedItems[spawnIndex] = component;
@@ -333,6 +345,17 @@ namespace SelfSortingStorage.Cupboard
                 else
                     StoredInstanceQuantities[networkIdToRemove]++;
             }
+        }
+
+        private void UpdateDisplayedQuantity(int spawnIndex, int quantity)
+        {
+            quantitiesTexts[spawnIndex].text = quantity <= 0 ? "" : (quantity > 99 ? "99" : quantity.ToString());
+        }
+
+        [ClientRpc]
+        private void UpdateDisplayedQuantityClientRpc(int spawnIndex, int quantity)
+        {
+            UpdateDisplayedQuantity(spawnIndex, quantity);
         }
 
         private IEnumerator SyncNetworkQuantity(NetworkObjectReference itemRef, int quantity)
@@ -419,10 +442,14 @@ namespace SelfSortingStorage.Cupboard
             {
                 if (!item.isHeld && !item.isHeldByEnemy)
                 {
-                    int quantity = 1;
-                    if (Plugin.config.quantityCursortipActive.Value && StoredInstanceQuantities.TryGetValue(item.NetworkObjectId, out var storedQuantity))
+                    int quantity = 0;
+                    if (Plugin.config.quantityDisplayActive.Value && int.TryParse(quantitiesTexts[spawnIndex].text, out int storedQuantityDisplayed))
                     {
-                        quantity = storedQuantity;
+                        quantity = storedQuantityDisplayed;
+                    }
+                    else if (Plugin.config.quantityCursortipActive.Value && StoredInstanceQuantities.TryGetValue(item.NetworkObjectId, out int storedQuantityCursor))
+                    {
+                        quantity = storedQuantityCursor;
                     }
                     Vector3 syncedPosition = item.targetFloorPosition;
                     Quaternion syncedRotation = item.transform.localRotation;
@@ -438,6 +465,10 @@ namespace SelfSortingStorage.Cupboard
             if (Plugin.config.quantityCursortipActive.Value)
             {
                 StartCoroutine(SyncNetworkQuantity(itemRef, quantity));
+            }
+            if (Plugin.config.quantityDisplayActive.Value)
+            {
+                UpdateDisplayedQuantity(spawnIndex, quantity);
             }
         }
 

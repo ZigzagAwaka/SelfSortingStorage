@@ -34,6 +34,7 @@ namespace SelfSortingStorage
         public readonly ConfigEntry<bool> resetButton;
         public readonly ConfigEntry<int> customScreenPos;
         public readonly ConfigEntry<bool> quantityCursortipActive;
+        public readonly ConfigEntry<bool> quantityDisplayActive;
 
         public readonly ConfigEntry<bool> verboseLogging;
 
@@ -63,6 +64,7 @@ namespace SelfSortingStorage
             resetButton = cfg.Bind("Upgrades", "Reset Button", false, "Activate the soft reset upgrade, adds the 'button of death' on the side of the storage that you can press to clear every stored items in the SSS.\nPressing this button will effectively destroy everything so you shouldn't have the need to activate this unless you really want a way to reset the storage without being fired.");
             customScreenPos = cfg.Bind("Upgrades", "SSS Screen position", 0, "If GeneralImprovements is installed and this value is not 0, then this mod will display SSS items on the desired screen. In GI config you need to set 'UseBetterMonitors = true', then set to 'None' the screen that will display the SSS items, then provide the screen position here to make it work.");
             quantityCursortipActive = cfg.Bind("Upgrades", "Quantity Cursortip", false, "When true, shows the quantity of the item stack on the cursortip UI when hovering an item stored in the Smart Cupboard.");
+            quantityDisplayActive = cfg.Bind("Upgrades", "Quantity Display", false, "When true, adds a small 'card' at the bottom of each item placement displaying the current item quantity.");
 
             verboseLogging = cfg.Bind("Logs", "Verbose logs", false, "Enable more explicit logs in the console (for debug reasons).");
 

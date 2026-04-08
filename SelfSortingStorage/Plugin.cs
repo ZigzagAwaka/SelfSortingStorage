@@ -104,6 +104,11 @@ namespace SelfSortingStorage
                 var lights = sssPrefab.transform.Find("Lights");
                 lights?.gameObject.SetActive(false);
             }
+            if (!config.quantityDisplayActive.Value)
+            {
+                var quantities = sssPrefab.transform.Find("Quantities");
+                quantities?.gameObject.SetActive(false);
+            }
             if (config.boxPosition.Value == "R")
             {
                 ReplaceTransform(sssPrefab, "ChutePosition/ActualPos", "ChutePosition/Pos2");
