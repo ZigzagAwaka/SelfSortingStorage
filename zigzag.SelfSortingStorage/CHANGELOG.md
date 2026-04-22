@@ -1,3 +1,6 @@
+## 1.5.1
+- Removed the `DestroyItemInSlot` patch and instead added [DestroyItemInSlotFix](https://thunderstore.io/c/lethal-company/p/JacobG5/DestroyItemInSlotFix/) as a dependency in the manifest (only in the manifest) to properly manage destroying an item in the utility slot
+
 ## 1.5.0
 - Updated to now be compatible with v81 of the game
 - Added the `Quantity Display` upgrade that can be activated in the config: will show the current quantity of the item stack on a small "card" under the stored item position

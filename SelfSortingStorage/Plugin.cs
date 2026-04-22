@@ -20,7 +20,7 @@ namespace SelfSortingStorage
     {
         const string GUID = "zigzag.SelfSortingStorage";
         const string NAME = "SelfSortingStorage";
-        const string VERSION = "1.5.0";
+        const string VERSION = "1.5.1";
 
         public static Plugin instance;
         public static ManualLogSource logger;
@@ -38,7 +38,7 @@ namespace SelfSortingStorage
             harmony.CreateClassProcessor(typeof(BeltBagItemPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(MenuManagerPatch), true).Patch();
 
-            DestroyItemInSlotMonoPatch.Load();
+            //DestroyItemInSlotMonoPatch.Load();
 
             if (Compatibility.LittleCompanyInstalled)
                 harmony.CreateClassProcessor(typeof(ShipBuildModeManagerLittleCompanyPatch), true).Patch();

@@ -4,6 +4,7 @@ using System;
 
 namespace SelfSortingStorage.Utils
 {
+    // Currently not used, instead rely on JacobG5-DestroyItemInSlotFix
     internal static class DestroyItemInSlotMonoPatch
     {
         public static void Load()
