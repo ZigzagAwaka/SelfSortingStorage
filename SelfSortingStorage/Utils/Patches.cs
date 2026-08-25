@@ -48,7 +48,9 @@ namespace SelfSortingStorage.Utils
         {
             if (StartOfRound.Instance == null || !StartOfRound.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return;
-            var cupboard = Object.FindObjectOfType<SmartCupboard>();
+            if (Plugin.config.preventMemoryReset.Value)
+                return;
+            SmartCupboard cupboard = Object.FindObjectOfType<SmartCupboard>();
             if (cupboard == null)
                 return;
             SmartMemory.Instance.ClearAll();
@@ -68,10 +70,10 @@ namespace SelfSortingStorage.Utils
         {
             if (RoundManager.Instance == null || !RoundManager.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return;
-            if (StartOfRound.Instance == null || !StartOfRound.Instance.allPlayersDead)
+            if (StartOfRound.Instance == null || !StartOfRound.Instance.allPlayersDead || Plugin.config.preventMemoryReset.Value)
                 return;
             int spawnIndex = 0;
-            var cupboard = Object.FindObjectOfType<SmartCupboard>();
+            SmartCupboard cupboard = Object.FindObjectOfType<SmartCupboard>();
             if (cupboard == null)
                 return;
             foreach (var list in SmartMemory.Instance.ItemList)

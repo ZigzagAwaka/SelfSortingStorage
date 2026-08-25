@@ -1,10 +1,13 @@
+## 1.5.2
+- Added `Prevent memory reset on death` misc config that can be used to avoid the cupboard's memory to be reseted when all players die on a moon or when getting a game over. This will require the use of an additional mod to prevent items from despawning however as items despawning is a vanilla behavior (defaults to false)
+
 ## 1.5.1
 - Removed the `DestroyItemInSlot` patch and instead added [DestroyItemInSlotFix](https://thunderstore.io/c/lethal-company/p/JacobG5/DestroyItemInSlotFix/) as a dependency in the manifest (only in the manifest) to properly manage destroying an item in the utility slot
 
 ## 1.5.0
 - Updated to now be compatible with v81 of the game
 - Added the `Quantity Display` upgrade that can be activated in the config: will show the current quantity of the item stack on a small "card" under the stored item position
-- Added a patch to prevent errors whenever an item in the utility slot is being destroyed by a call to `DestroyItemInSlot` (this will be removed if fixed in vanilla)
+- Added a patch to prevent errors whenever an item in the utility slot is being destroyed by a call to `DestroyItemInSlot`
 
 ## 1.4.6
 - Fixed compatibility with [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) 0.7.3+
