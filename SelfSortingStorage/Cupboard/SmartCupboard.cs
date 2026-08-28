@@ -191,6 +191,8 @@ namespace SelfSortingStorage.Cupboard
                 var itemData = new SmartMemory.Data(grabbableObject) { Quantity = permanent.Item2 };
                 itemData.Values.AddRange(Enumerable.Repeat(itemData.Values[0], itemData.Quantity - 1));
                 itemData.Saves.AddRange(Enumerable.Repeat(itemData.Saves[0], itemData.Quantity - 1));
+                itemData.States.Clear();
+                itemData.States.AddRange(Enumerable.Repeat(true, itemData.Quantity));
                 if (memory.StoreData(itemData, out int spawnIndex))
                     SpawnItem(itemData, spawnIndex);
                 if (Plugin.config.verboseLogging.Value)
@@ -254,7 +256,7 @@ namespace SelfSortingStorage.Cupboard
             var item = Effects.GetItem(itemData.Id);
             if (item != null)
             {
-                var itemRef = Effects.SpawnItem(item, this, spawnIndex, itemData.Values[0], itemData.Saves[0]);
+                var itemRef = Effects.SpawnItem(item, this, spawnIndex, itemData.Values[0], itemData.Saves[0], itemData.States[0]);
                 SyncItemClientRpc(itemRef.netObjectRef, itemRef.value, itemRef.save, itemData.Quantity, spawnIndex, isStacked);
             }
         }

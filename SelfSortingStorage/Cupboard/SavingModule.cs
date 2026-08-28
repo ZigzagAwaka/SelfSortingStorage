@@ -38,7 +38,11 @@ namespace SelfSortingStorage.Cupboard
             foreach (var item in items)
             {
                 if (item.IsValid())
+                {
+                    item.States.Clear();
+                    item.States.AddRange(Enumerable.Repeat(true, item.Quantity));
                     SmartMemory.Instance.StoreData(item, out _, true);
+                }
                 else
                     SmartMemory.Instance.IgnoreSpaces.Add(spawnIndex);
                 spawnIndex++;

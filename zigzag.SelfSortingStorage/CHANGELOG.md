@@ -1,3 +1,7 @@
+## 1.5.3
+- Added a patch to correctly calculate the scraps values in the end of game stats screen for items stored in the cupboard's memory
+- Fixed the item stacks from not being reseted upon all players dying on a moon for scraps with their value equals to 0
+
 ## 1.5.2
 - Added `Prevent memory reset on death` misc config that can be used to avoid the cupboard's memory to be reseted when all players die on a moon or when getting a game over. This will require the use of an additional mod to prevent items from despawning however as items despawning is a vanilla behavior (defaults to false)
 
@@ -37,7 +41,7 @@
 - Added a system where the mod will fallback to using [LethalLib](https://thunderstore.io/c/lethal-company/p/Evaisa/LethalLib/), [Matty_Fixes](https://thunderstore.io/c/lethal-company/p/mattymatty/Matty_Fixes/) and [GeneralImprovements](https://thunderstore.io/c/lethal-company/p/ShaosilGaming/GeneralImprovements/) if [DawnLib](https://thunderstore.io/c/lethal-company/p/TeamXiaolan/DawnLib/) is not installed or if the `Item Saving` config from DawnLib is disabled
 - Added the `Permanent items` misc config feature that allows the host player to define specific items that will be permanently stored in the SSS (none by default)
 - Added a check to prevent non valid values to being applied from the `Cupboard Color` config
-- Fixed a minor error in the SSS memory
+- Fixed a minor error in the cupboard's memory
 - Updated compatibility notes in the README
 
 ## 1.3.0

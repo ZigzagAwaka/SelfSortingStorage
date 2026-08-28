@@ -8,12 +8,36 @@ namespace SelfSortingStorage.Cupboard
 {
     public class SmartMemory
     {
+        /// <summary>
+        /// The item data structure that represent items stored in a memory's stack.
+        /// All is serialized except States since those are pre-set when reloading the memory
+        /// </summary>
         [Serializable]
         public class Data
         {
+            /// <summary>
+            /// Unique id to represent and search for the item, matches "ItemOrigin/ItemName"
+            /// </summary>
             public string Id = "INVALID";
+
+            /// <summary>
+            /// All scrap values of the stored items stack
+            /// </summary>
             public List<int> Values = new List<int>();
+
+            /// <summary>
+            /// All save data values of the stored items stack
+            /// </summary>
             public List<int> Saves = new List<int>();
+
+            /// <summary>
+            /// All persistent state values of the stored items stack
+            /// </summary>
+            public List<bool> States = new List<bool>();
+
+            /// <summary>
+            /// The current quantity of the stored items stack
+            /// </summary>
             public int Quantity = 1;
 
             public Data() { }
@@ -23,6 +47,7 @@ namespace SelfSortingStorage.Cupboard
                 Id = ConvertID(item.itemProperties);
                 Values.Add(item.itemProperties.isScrap ? item.scrapValue : 0);
                 Saves.Add(item.itemProperties.saveItemVariable ? item.GetItemDataToSave() : 0);
+                States.Add(item.scrapPersistedThroughRounds);
             }
 
             public bool IsValid()
@@ -37,6 +62,8 @@ namespace SelfSortingStorage.Cupboard
                 Values.AddRange(data.Values);
                 Saves.Clear();
                 Saves.AddRange(data.Saves);
+                States.Clear();
+                States.AddRange(data.States);
                 Quantity = data.Quantity;
             }
 
@@ -158,6 +185,7 @@ namespace SelfSortingStorage.Cupboard
                             Plugin.logger.LogWarning("Found a similar item");
                         item.Values.Add(data.Values[0]);
                         item.Saves.Add(data.Saves[0]);
+                        item.States.Add(data.States[0]);
                         item.Quantity++;
                         return false;
                     }
@@ -199,6 +227,7 @@ namespace SelfSortingStorage.Cupboard
             {
                 result.Values.RemoveAt(0);
                 result.Saves.RemoveAt(0);
+                result.States.RemoveAt(0);
                 result.Quantity--;
                 if (result.Quantity <= 0)
                 {

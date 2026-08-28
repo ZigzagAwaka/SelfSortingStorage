@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SelfSortingStorage.Cupboard;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -58,19 +59,12 @@ namespace SelfSortingStorage.Utils
             if (Plugin.config.verboseLogging.Value)
                 Plugin.logger.LogInfo("Smart Cupboard was reseted due to a game over.");
         }
-    }
 
-
-    [HarmonyPatch(typeof(RoundManager))]
-    internal class RoundManagerPatch
-    {
         [HarmonyPostfix]
-        [HarmonyPatch("DespawnPropsAtEndOfRound")]
-        public static void ResetSmartCupboardIfAllDeads()
+        [HarmonyPatch("GetValueOfAllScrap")]
+        public static void GetValueOfAllScrapInCupboard(ref int __result, bool onlyNewScrap)
         {
-            if (RoundManager.Instance == null || !RoundManager.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
-                return;
-            if (StartOfRound.Instance == null || !StartOfRound.Instance.allPlayersDead || Plugin.config.preventMemoryReset.Value)
+            if (StartOfRound.Instance == null || !StartOfRound.Instance.IsServer || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
                 return;
             int spawnIndex = 0;
             SmartCupboard cupboard = Object.FindObjectOfType<SmartCupboard>();
@@ -78,18 +72,63 @@ namespace SelfSortingStorage.Utils
                 return;
             foreach (var list in SmartMemory.Instance.ItemList)
             {
-                foreach (var item in list)
+                foreach (var itemData in list)
                 {
-                    if (item.IsValid() && item.Values[0] != 0)
+                    if (itemData.IsValid() && cupboard.placedItems.TryGetValue(spawnIndex, out var itemObject) && itemObject.itemProperties.isScrap)
                     {
-                        item.Id = "INVALID";
-                        SmartMemory.Instance.Size--;
-                        cupboard.placedItems.Remove(spawnIndex);
+                        for (int i = 1; i < itemData.Quantity; i++) // starts at 1 because the first item's value in the stack is already got in vanilla!
+                        {
+                            if (!onlyNewScrap || !itemData.States[i])
+                                __result += itemData.Values[i];
+                        }
                     }
                     spawnIndex++;
                 }
             }
-            if (Plugin.config.verboseLogging.Value)
+        }
+    }
+
+
+    [HarmonyPatch(typeof(RoundManager))]
+    internal class RoundManagerPatch
+    {
+        /// <summary>
+        /// Manages removal of scraps if all players are dead, and manages
+        /// the pre-set of the persistent state of items otherwise
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch("DespawnPropsAtEndOfRound")]
+        public static void EndOfRoundCupboardEffects(bool despawnAllItems)
+        {
+            if (RoundManager.Instance == null || !RoundManager.Instance.IsServer || StartOfRound.Instance == null || SmartMemory.Instance == null || SmartMemory.Instance.Size == 0)
+                return;
+            int spawnIndex = 0;
+            bool shouldResetScraps = StartOfRound.Instance.allPlayersDead && !Plugin.config.preventMemoryReset.Value;
+            SmartCupboard cupboard = Object.FindObjectOfType<SmartCupboard>();
+            if (cupboard == null)
+                return;
+            foreach (var list in SmartMemory.Instance.ItemList)
+            {
+                foreach (var itemData in list)
+                {
+                    if (itemData.IsValid())
+                    {
+                        if (despawnAllItems || (shouldResetScraps && cupboard.placedItems.TryGetValue(spawnIndex, out var itemObject) && itemObject.itemProperties.isScrap))
+                        {
+                            itemData.Id = "INVALID";
+                            SmartMemory.Instance.Size--;
+                            cupboard.placedItems.Remove(spawnIndex);
+                        }
+                        else
+                        {
+                            itemData.States.Clear();
+                            itemData.States.AddRange(Enumerable.Repeat(true, itemData.Quantity));
+                        }
+                    }
+                    spawnIndex++;
+                }
+            }
+            if (shouldResetScraps && Plugin.config.verboseLogging.Value)
                 Plugin.logger.LogInfo("Smart Cupboard stored scraps were removed due to all players being dead.");
         }
     }

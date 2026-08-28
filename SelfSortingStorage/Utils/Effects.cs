@@ -198,7 +198,17 @@ namespace SelfSortingStorage.Utils
                 return SmartMemory.CacheItems.GetValueOrDefault(id);
         }
 
-        public static ItemNetworkReference SpawnItem(Item item, SmartCupboard cupboard, int spawnIndex, int value = 0, int save = 0)
+        /// <summary>
+        /// Spawn the desired item in the cupboard at the position defined by spawnIndex
+        /// </summary>
+        /// <param name="item">The desired item to spawn</param>
+        /// <param name="cupboard">Current ref to the cupboard</param>
+        /// <param name="spawnIndex">The index position in the cupboard where to spawn the item</param>
+        /// <param name="value">Scrap value of the item</param>
+        /// <param name="save">Save data of the item</param>
+        /// <param name="state">Persistent through rounds state of the item</param>
+        /// <returns>A network reference representing the item that got spawned</returns>
+        public static ItemNetworkReference SpawnItem(Item item, SmartCupboard cupboard, int spawnIndex, int value = 0, int save = 0, bool state = false)
         {
             cupboard.GetPlacePosition(spawnIndex, out var parent, out var position, out var rotation);
             GameObject gameObject = Object.Instantiate(item.spawnPrefab, position, rotation, parent ?? StartOfRound.Instance.elevatorTransform);
@@ -214,6 +224,7 @@ namespace SelfSortingStorage.Utils
                 component.SetScrapValue(value);
             if (component.itemProperties.saveItemVariable)
                 component.LoadItemSaveData(save);
+            component.scrapPersistedThroughRounds = state;
             component.NetworkObject.Spawn();
             return new ItemNetworkReference(gameObject.GetComponent<NetworkObject>(), value, component.itemProperties.saveItemVariable ? component.GetItemDataToSave() : save);
         }
