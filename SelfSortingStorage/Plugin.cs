@@ -37,6 +37,7 @@ namespace SelfSortingStorage
             harmony.CreateClassProcessor(typeof(RoundManagerPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(BeltBagItemPatch), true).Patch();
             harmony.CreateClassProcessor(typeof(MenuManagerPatch), true).Patch();
+            harmony.CreateClassProcessor(typeof(BuyItemsServerRpcPatch), true).Patch();
 
             //DestroyItemInSlotMonoPatch.Load();
 

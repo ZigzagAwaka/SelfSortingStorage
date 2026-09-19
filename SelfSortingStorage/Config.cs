@@ -39,6 +39,8 @@ namespace SelfSortingStorage
 
         public readonly ConfigEntry<bool> verboseLogging;
 
+        public readonly ConfigEntry<bool> autoStoreTerminalPurchases;
+
         public Config(ConfigFile cfg)
         {
             cfg.SaveOnConfigSet = false;
@@ -69,6 +71,8 @@ namespace SelfSortingStorage
             quantityDisplayActive = cfg.Bind("Upgrades", "Quantity Display", false, "When true, adds a small 'card' at the bottom of each item placement displaying the current item quantity.");
 
             verboseLogging = cfg.Bind("Logs", "Verbose logs", false, "Enable more explicit logs in the console (for debug reasons).");
+
+            autoStoreTerminalPurchases = cfg.Bind("Purchases", "Auto-Store Purchases", true, "Enable automatic storing of purchased grabbable items from the terminal into the smart cupboard, bypassing dropship.");
 
             cfg.Save();
             cfg.SaveOnConfigSet = true;

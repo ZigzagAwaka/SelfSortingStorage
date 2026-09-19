@@ -67,7 +67,7 @@ namespace SelfSortingStorage.Cupboard
                 Quantity = data.Quantity;
             }
 
-            private string ConvertID(Item sourceItem)
+            public static string ConvertID(Item sourceItem)
             {
                 foreach (var (id, item) in CacheItems)
                 {

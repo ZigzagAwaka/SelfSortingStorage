@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SelfSortingStorage.Cupboard
 {
-    public class SmartCupboard : NetworkBehaviour
+    public partial class SmartCupboard : NetworkBehaviour
     {
         public NetworkObject parentObject;
         public InteractTrigger triggerScript;
@@ -25,6 +25,8 @@ namespace SelfSortingStorage.Cupboard
         public static bool SpawnedInShip { get; private set; } = false;
         public static Dictionary<ulong, int> StoredInstanceQuantities { get; } = new Dictionary<ulong, int>();
 
+        public static SmartCupboard? Instance { get; private set; }
+
         public SmartCupboard() { }
 
         public override void OnNetworkSpawn()
@@ -34,6 +36,7 @@ namespace SelfSortingStorage.Cupboard
             if (IsServer)
             {
                 memory.InitializeCache();
+                Instance = this;
                 if (Compatibility.GeneralImprovementsInstalled && Plugin.config.customScreenPos.Value > 0 && Plugin.config.customScreenPos.Value <= 14)
                     StartCoroutine(DisplayOnScreen());
                 var hangarShip = GameObject.Find("/Environment/HangarShip");
@@ -55,6 +58,8 @@ namespace SelfSortingStorage.Cupboard
             base.OnNetworkDespawn();
             SpawnedInShip = false;
             StoredInstanceQuantities.Clear();
+            if (IsServer)
+                Instance = null;
         }
 
         private void PreparePlacePositions()
@@ -275,10 +280,23 @@ namespace SelfSortingStorage.Cupboard
                 var component = itemNetObject.GetComponent<GrabbableObject>();
                 if (!isStacked)
                     component.PlayDropSFX();
+                int actualQuantity = quantity;
+
+                int place = spawnIndex / Plugin.instance.ROWS_LENGTH;
+                int diff = spawnIndex % Plugin.instance.ROWS_LENGTH;
+
+                if (place >= 0 && place < memory.ItemList.Count && diff >= 0 && diff < memory.ItemList[place].Count)
+                {
+                    var currentData = memory.ItemList[place][diff];
+
+                    if (currentData.IsValid()) actualQuantity = currentData.Quantity;
+                }
+
                 if (Plugin.config.quantityCursortipActive.Value)
-                    StoredInstanceQuantities.Add(component.NetworkObjectId, quantity);
+                    StoredInstanceQuantities[component.NetworkObjectId] = actualQuantity;
+
                 if (Plugin.config.quantityDisplayActive.Value)
-                    UpdateDisplayedQuantity(spawnIndex, quantity);
+                    UpdateDisplayedQuantity(spawnIndex, actualQuantity);
                 if (IsServer)
                 {
                     placedItems[spawnIndex] = component;
